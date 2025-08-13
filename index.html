@@ -1,1474 +1,872 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="app-specialty" content="Orthopedics">
   <title>InfoHealth AI – General Medicine</title>
-  <link rel="icon" href="infohealth-logo.png" />
+  <link rel="icon" href="logo-silver.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     * { box-sizing: border-box; }
-    
-    /* Splash Screen Styles */
-    .splash-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #000000;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      opacity: 1;
-      transition: opacity 1s ease-out;
-    }
-    
-    .splash-screen.fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-    
-    .splash-logo {
-      width: 200px;
-      height: auto;
-      margin-bottom: 20px;
-      animation: logoFloat 2s ease-in-out infinite alternate;
-      filter: drop-shadow(0 10px 20px rgba(218, 165, 32, 0.3));
-    }
-    
-    .splash-title {
-      color: #DAA520;
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      text-align: center;
-      text-shadow: 0 2px 10px rgba(218, 165, 32, 0.5);
-      animation: titleGlow 2s ease-in-out infinite alternate;
-    }
-    
-    .splash-subtitle {
-      color: #ffffff;
-      font-size: 1.1rem;
-      font-weight: 300;
-      text-align: center;
-      margin-bottom: 40px;
-      opacity: 0.9;
-    }
-    
-    .splash-loader {
-      width: 60px;
-      height: 60px;
-      border: 4px solid rgba(218, 165, 32, 0.3);
-      border-top: 4px solid #DAA520;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    
-    .splash-progress {
-      margin-top: 20px;
-      color: #DAA520;
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-    
-    @keyframes logoFloat {
-      0% { transform: translateY(0px); }
-      100% { transform: translateY(-10px); }
-    }
-    
-    @keyframes titleGlow {
-      0% { text-shadow: 0 2px 10px rgba(218, 165, 32, 0.5); }
-      100% { text-shadow: 0 2px 20px rgba(218, 165, 32, 0.8); }
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    /* Main App Initially Hidden */
-    .main-app {
-      opacity: 0;
-      transition: opacity 1s ease-in;
-    }
-    
-    .main-app.show {
-      opacity: 1;
-    }
-
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 25%, #3c3c3c 50%, #2a2a2a 75%, #000000 100%);
+      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 25%, #3c3c3c 50%, #2a2a2a 75%, #000);
       min-height: 100vh;
       padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      display: flex; justify-content: center; align-items: center;
     }
-
     .mobile-frame {
       width: 100%;
-      max-width: 420px;
-      height: 95vh;
-      max-height: 900px;
-      background: linear-gradient(145deg, #000000 0%, #1a1a1a 50%, #2c2c2c 100%);
+      max-width: 380px;
+      height: 90vh;
+      max-height: 800px;
+      background: linear-gradient(145deg, #000 0%, #1a1a1a 50%, #2c2c2c 100%);
       border-radius: 35px;
       padding: 8px;
-      box-shadow: 
-        0 25px 50px rgba(0, 0, 0, 0.6),
-        0 0 0 1px rgba(255, 255, 255, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        0 0 30px rgba(218, 165, 32, 0.2);
-      position: relative;
-      overflow: hidden;
+      box-shadow:
+        0 25px 50px rgba(0,0,0,.6),
+        0 0 0 1px rgba(255,255,255,.08),
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 0 30px rgba(218,165,32,.2);
+      position: relative; overflow: hidden;
     }
-
     .mobile-frame::before {
-      content: '';
-      position: absolute;
-      top: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 120px;
-      height: 4px;
-      background: linear-gradient(90deg, #333 0%, #555 50%, #333 100%);
-      border-radius: 2px;
+      content: ''; position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+      width: 120px; height: 4px; background: linear-gradient(90deg,#333,#555,#333); border-radius: 2px; z-index: 10;
+    }
+    .wrapper { width: 100%; height: 100%; display: flex; flex-direction: column; background: #fff; border-radius: 27px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+    .header {
+      background: linear-gradient(135deg, #000 0%, #1a1a1a 50%, #2c2c2c 100%);
+      padding: 1rem 1rem .5rem; text-align: center; color: #fff;
+      display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden;
+    }
+    .header::before {
+      content:''; position:absolute; inset:0; background: linear-gradient(45deg, rgba(255,255,255,.05), transparent 50%, rgba(218,165,32,.12) 100%);
+      pointer-events:none;
+    }
+    .header img { height: 80px; max-width: 90%; object-fit: contain; display: block; margin: 0 auto; filter: drop-shadow(0 2px 8px rgba(0,0,0,.5)); position: relative; z-index: 1; }
+    .translate-btn {
+      position: absolute; top: 1rem; right: 1rem;
+      background: linear-gradient(135deg,#DAA520,#B8860B); color:#fff; border:none;
+      padding: .3rem .6rem; border-radius: 15px; font-size: .7rem; font-weight: 600; cursor: pointer;
+      box-shadow: 0 2px 6px rgba(218,165,32,.3); transition: transform .2s ease, box-shadow .2s ease;
       z-index: 10;
     }
-
-    .wrapper {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      background: white;
-      border-radius: 27px;
-      overflow: hidden;
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
-    }
-
-    .header {
-      background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2c2c2c 100%);
-      padding: 1rem 1rem 0.5rem 1rem;
-      text-align: center;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .header img {
-      height: 80px;
-      max-width: 90%;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto;
-      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
-      position: relative;
-      z-index: 1;
-    }
-
-    .cards-container {
-      background: #f8f9fa;
-      padding: 0.5rem;
-      border-bottom: 2px solid #e0e0e0;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .cards-section {
-      margin-bottom: 0.4rem;
-      position: relative;
-      border-radius: 8px;
-      overflow: hidden;
-      background: #f8f9fa;
-    }
-    
-    .cards-section:last-child {
-      margin-bottom: 0;
-    }
-    
-    .cards-section h3 {
-      margin: 0 0 0.3rem 0;
-      color: #333;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      padding: 0.5rem;
-      background: rgba(255,255,255,0.9);
-      backdrop-filter: blur(5px);
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.25rem;
-      padding: 0 0.5rem 0.5rem 0.5rem;
-    }
+    .translate-btn:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(218,165,32,.4); }
+    .cards-container { background:#f8f9fa; padding:.5rem; border-bottom:2px solid #e0e0e0; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    .cards-section { margin-bottom:.4rem; }
+    .cards-section h3 { margin:0 0 .3rem; color:#333; font-size:.7rem; text-transform: uppercase; font-weight: 700; letter-spacing:.5px; }
+    .cards { display:grid; grid-template-columns: repeat(4,1fr); gap:.25rem; }
     .card {
-      background: rgba(255,255,255,0.95);
-      padding: 0.4rem 0.2rem;
-      border-radius: 4px;
-      text-align: center;
-      font-size: 0.65rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-      border: 1px solid #e0e0e0;
-      min-height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #333;
-      line-height: 1.1;
-      backdrop-filter: blur(5px);
+      background:#fff; padding:.4rem .2rem; border-radius:4px; text-align:center; font-size:.65rem; font-weight:600;
+      cursor:pointer; transition: all .2s ease; box-shadow: 0 1px 2px rgba(0,0,0,.1); border:1px solid #e0e0e0;
+      min-height: 32px; display:flex; align-items:center; justify-content:center; color:#333; line-height:1.1;
     }
-
-    .card:hover { 
-      transform: translateY(-1px); 
-      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-      border-color: #DAA520;
-      background: rgba(255,255,255,1);
-    }
-
-    .chat {
-      flex: 1;
-      padding: 1rem !important;
-      overflow-y: auto;
-      background: white;
-      scroll-behavior: smooth;
-      display: flex;
-      flex-direction: column;
-    }
-    .bubble-wrapper {
-      display: flex;
-      gap: 0.4rem;
-      margin-bottom: 0.8rem;
-      align-items: flex-end;
-    }
-    .bubble-wrapper.user {
-      flex-direction: row-reverse;
-    }
+    .card:hover, .card:focus { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,.15); border-color:#DAA520; outline: 2px solid #DAA520; outline-offset: 2px; }
+    .chat { flex:1; padding:.8rem !important; overflow-y:auto; background:#fff; }
+    .bubble-wrapper { display:flex; gap:.4rem; margin-bottom:.8rem; align-items: flex-end; }
+    .bubble-wrapper.user { flex-direction: row-reverse; }
     .avatar img {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-      padding: 2px;
-      border: 1px solid rgba(218, 165, 32, 0.3);
+      width:28px; height:28px; border-radius:50%; object-fit:cover;
+      background: linear-gradient(135deg,#000,#1a1a1a); padding:2px; border:1px solid rgba(218,165,32,.3);
     }
-    .message {
-      padding: 0.8rem 1rem;
-      border-radius: 12px;
-      max-width: 85%;
-      line-height: 1.6;
-      font-size: 0.95rem;
-      word-wrap: break-word;
-    }
-    
-    .message ul, .message ol {
-      margin: 0.5rem 0;
-      padding-left: 1rem;
-    }
-    
-    .message li {
-      margin-bottom: 0.2rem;
-      line-height: 1.3;
-    }
-    
-    .message p {
-      margin: 0.5rem 0;
-      line-height: 1.4;
-    }
-    
-    .message strong {
-      display: block;
-      margin: 0.6rem 0 0.3rem 0;
-      color: #DAA520;
-      font-weight: 700;
-      font-size: 0.95rem;
-      border-bottom: 1px solid #e0e0e0;
-      padding-bottom: 0.2rem;
-    }
-    .user .message {
-      background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%);
-      color: white;
-      box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
-    }
-    .bot .message {
-      background: #f8f9fa;
-      color: #333;
-      border: 1px solid #e0e0e0;
-    }
-
-    .input-area {
-      display: flex;
-      padding: 0.8rem;
-      background: white;
-      border-top: 1px solid #e0e0e0;
-    }
-    .input-area input {
-      flex: 1;
-      padding: 0.6rem;
-      border-radius: 20px;
-      border: 1px solid #e0e0e0;
-      outline: none;
-      font-size: 0.9rem;
-    }
-    .input-area input:focus {
-      border-color: #DAA520;
-    }
+    .message { padding:.6rem .8rem; border-radius:12px; max-width:75%; line-height:1.5; font-size:.9rem; word-wrap:break-word; }
+    .message strong { display:block; margin:.8rem 0 .4rem; color:#DAA520; font-weight:800; font-size:.95rem; border-bottom:1px solid #e0e0e0; padding-bottom:.2rem; }
+    .user .message { background: linear-gradient(135deg, #6B7280, #4B5563); color:#fff; box-shadow: 0 2px 8px rgba(107,114,128,.3); }
+    .bot  .message { background:#f8f9fa; color:#333; border:1px solid #e0e0e0; }
+    .ai-status { background: linear-gradient(135deg,#28a745,#20c997); color:#fff; padding:.3rem .6rem; border-radius:12px; font-size:.7rem; font-weight:600; margin:.5rem auto 0; display:inline-block; box-shadow: 0 2px 6px rgba(40,167,69,.3); }
+    .input-area { display:flex; padding:.8rem; background:#fff; border-top:1px solid #e0e0e0; gap:.5rem; align-items: center; }
+    .input-area input { flex:1; padding:.6rem; border-radius:20px; border:1px solid #e0e0e0; outline:none; font-size:.9rem; }
+    .input-area input:focus { border-color:#DAA520; }
     .input-area button {
-      margin-left: 0.6rem;
-      background: linear-gradient(135deg, #DAA520 0%, #B8860B 100%);
-      color: white;
-      border: none;
-      padding: 0.6rem 1rem;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: 500;
-      font-size: 0.9rem;
-      box-shadow: 0 2px 8px rgba(218, 165, 32, 0.3);
+      background: linear-gradient(135deg, #DAA520, #B8860B); color:#fff; border:none; padding:.6rem 1rem;
+      border-radius:20px; cursor:pointer; font-weight:600; font-size:.9rem; box-shadow:0 2px 8px rgba(218,165,32,.3);
     }
-
-    .medical-image {
-      max-width: 300px;
-      max-height: 200px;
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-      margin: 10px 0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    /* Health Management Modal Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 10000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.8);
-    }
-
-    .modal-content {
-      background-color: white;
-      margin: 2% auto;
-      padding: 20px;
-      border-radius: 15px;
-      width: 90%;
-      max-width: 600px;
-      max-height: 90vh;
-      overflow-y: auto;
-      position: relative;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-      position: absolute;
-      right: 15px;
-      top: 10px;
-    }
-
-    .close:hover {
-      color: #DAA520;
-    }
-
-    .modal h2 {
-      color: #DAA520;
-      margin-bottom: 20px;
-      border-bottom: 2px solid #DAA520;
-      padding-bottom: 10px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 600;
-      color: #333;
-    }
-
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-      border-color: #DAA520;
-      outline: none;
-    }
-
-    .btn {
-      background: linear-gradient(135deg, #DAA520 0%, #B8860B 100%);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      margin-right: 10px;
-      margin-bottom: 10px;
-    }
-
-    .btn:hover {
-      background: linear-gradient(135deg, #B8860B 0%, #DAA520 100%);
-    }
-
-    .btn-secondary {
-      background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      margin-right: 10px;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-    }
-
-    .btn-secondary:hover {
-      background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
-    }
-
-    .home-btn {
-      margin-left: 0.6rem;
-      background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
-      color: white;
-      border: none;
-      padding: 0.6rem 1rem;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: 500;
-      font-size: 0.9rem;
-      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-    }
-
-    .home-btn:hover {
-      background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
-    }
-
-    .health-card {
-      background: #f8f9fa;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 15px;
-    }
-
-    .health-card h4 {
-      margin: 0 0 10px 0;
-      color: #DAA520;
-    }
-
-    .reading-entry {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr auto;
-      gap: 10px;
-      align-items: center;
-      padding: 10px;
-      background: white;
-      border-radius: 6px;
-      margin-bottom: 10px;
-    }
-
-    .delete-btn {
-      background: #dc3545;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 2px;
-      margin-top: 15px;
-    }
-
-    .calendar-day {
-      padding: 10px;
-      text-align: center;
-      border: 1px solid #eee;
-      cursor: pointer;
-      background: white;
-    }
-
-    .calendar-day:hover {
-      background: #f0f8ff;
-    }
-
-    .calendar-day.selected {
-      background: #DAA520;
-      color: white;
-    }
-
-    .calendar-day.has-event {
-      background: #e8f5e8;
-      border-color: #28a745;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 450px) {
-      body {
-        padding: 10px;
-      }
-      .mobile-frame {
-        max-width: 100%;
-        height: 95vh;
-        border-radius: 25px;
-      }
-      .wrapper {
-        border-radius: 17px;
-      }
-      .modal-content {
-        width: 95%;
-        margin: 5% auto;
-        padding: 15px;
-      }
-      .reading-entry {
-        grid-template-columns: 1fr 1fr;
-        gap: 5px;
-      }
-      
-      .health-reading-grid {
-        grid-template-columns: 1fr !important;
-        gap: 10px !important;
-      }
-      
-      .health-reading-grid input,
-      .health-reading-grid select,
-      .health-reading-grid button {
-        width: 100%;
-        margin-bottom: 10px;
-      }
-    }
+    #providerSelect { border:1px solid #e0e0e0; border-radius:20px; padding:.45rem .6rem; background:#fff; font-size:.85rem; }
+    .form-container { background:#f8f9fa; padding:1rem; border-radius:8px; margin:.5rem 0; border:1px solid #e0e0e0; }
+    .btn { background: linear-gradient(135deg,#DAA520,#B8860B); color:#fff; border:none; padding:.4rem .8rem; border-radius:4px; cursor:pointer; font-weight:600; margin-right:.4rem; font-size:.75rem; box-shadow:0 2px 6px rgba(218,165,32,.3); }
+    .btn-home { background: linear-gradient(135deg,#17a2b8,#138496); color:#fff; border:none; padding:.35rem .7rem; border-radius:4px; cursor:pointer; font-weight:700; font-size:.75rem; box-shadow:0 2px 6px rgba(23,162,184,.3); }
+    .calendar-grid { display:grid; grid-template-columns: repeat(7,1fr); gap:2px; margin:1rem 0; background:#f0f0f0; border-radius:8px; padding:4px; }
+    .calendar-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:.5rem; padding:0 .5rem; }
+    .calendar-nav { background:#DAA520; color:#fff; border:none; padding:.3rem .8rem; border-radius:15px; cursor:pointer; font-size:.8rem; font-weight:600; }
+    .calendar-day-header { text-align:center; font-weight:700; color:#666; padding:8px 4px; font-size:.7rem; background:#e9ecef; }
+    .calendar-day { aspect-ratio:1; display:flex; align-items:center; justify-content:center; background:#fff; font-size:.8rem; cursor:pointer; position:relative; border-radius:4px; transition:.2s; }
+    .calendar-day.today { background:#DAA520; color:#fff; font-weight:bold; }
+    .calendar-day.has-appointment { background: linear-gradient(135deg, #0d47a1, #1976d2); color:#fff; font-weight:bold; }
+    .calendar-day.has-appointment::after { content:'📋'; position:absolute; bottom:1px; right:1px; font-size:.6rem; }
+    /* Splash */
+    .splash { position: fixed; inset: 0; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: radial-gradient(60% 60% at 50% 40%, rgba(255,255,255,.06) 0%, rgba(0,0,0,0) 60%), linear-gradient(135deg, #0d0d0d, #1a1a1a 50%, #2a2a2a);
+      transition: opacity .45s ease, visibility .45s ease; }
+    .splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .splash-card { width: 220px; height: 220px; border-radius: 16px; background: #0f0f0f; display:flex; align-items:center; justify-content:center;
+      box-shadow: 0 10px 26px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06); overflow: hidden; animation: splash-float 2.4s ease-in-out infinite; }
+    .splash-card img { width: 100%; height: 100%; object-fit: contain; }
+    .brand { margin-top: 14px; font-weight: 800; font-size: clamp(18px, 4.5vw, 26px); letter-spacing: .4px;
+      background: linear-gradient(90deg, #fff, #e6d1a0 50%, #fff); -webkit-background-clip: text; background-clip: text; color: transparent;
+      background-size: 200% 100%; animation: splash-shimmer 2.2s linear infinite; text-align: center; }
+    .loader { width: clamp(140px, 52vw, 300px); height: 4px; margin-top: 14px; background: rgba(255,255,255,.18); border-radius: 999px; overflow: hidden; }
+    .loader::before { content:""; display:block; height:100%; width:40%; background: linear-gradient(90deg, rgba(255,255,255,.05), rgba(255,255,255,.85), rgba(255,255,255,.05)); animation: splash-load 1.15s ease-in-out infinite; }
+    .skip { position: absolute; bottom: 28px; padding: 6px 12px; border-radius: 999px; background: transparent; color:#fff; border:1px solid rgba(255,255,255,.35); font-size:.75rem; opacity:.75; cursor:pointer; }
+    .skip:hover{ opacity:1; }
+    @keyframes splash-load { 0% { transform: translateX(-60%);} 100% { transform: translateX(160%);} }
+    @keyframes splash-float { 0% { transform: translateY(0) scale(1);} 50% { transform: translateY(-4px) scale(1.012);} 100% { transform: translateY(0) scale(1);} }
+    @keyframes splash-shimmer { 0% { background-position:-200% 0;} 100% { background-position:200% 0;} }
+    @media (prefers-reduced-motion: reduce){ .splash-card, .brand, .loader::before { animation: none !important; } }
+    /* Consent modal */
+    .consent{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:99998; outline:none;}
+    .consent-card{width:min(520px,92vw);background:#fff;border-radius:12px;padding:18px;border:1px solid #e5e5e5;box-shadow:0 12px 30px rgba(0,0,0,.25);}
+    .consent-card h3{margin:.25rem 0 0.5rem;font-size:1.05rem}
+    .consent-card p{margin:.25rem 0 .5rem;color:#444;font-size:.92rem;line-height:1.35}
+    @media (max-width: 450px) { body { padding: 10px; } .mobile-frame { max-width: 100%; height: 95vh; border-radius: 25px; } .wrapper { border-radius: 17px; } }
   </style>
 </head>
 <body>
   <!-- Splash Screen -->
-  <div class="splash-screen" id="splashScreen">
-    <img src="infohealth-logo.png" alt="InfoHealth AI Logo" class="splash-logo">
-    <h1 class="splash-title">InfoHealth AI</h1>
-    <p class="splash-subtitle">Your Intelligent Health Companion</p>
-    <div class="splash-loader"></div>
-    <p class="splash-progress">Loading your health dashboard...</p>
+  <div id="splash" class="splash" aria-label="Loading InfoHealth AI" role="status">
+    <div class="splash-card"><img src="splash.png" alt="InfoHealth AI"></div>
+    <div class="brand">InfoHealth AI</div>
+    <div class="loader" aria-hidden="true"></div>
+    <button class="skip" onclick="hideSplash(true)" aria-label="Skip loading">Skip</button>
   </div>
 
-  <!-- Main App -->
-  <div class="main-app" id="mainApp">
-    <div class="mobile-frame">
+  <div class="mobile-frame">
     <div class="wrapper">
       <div class="header">
-        <img src="infohealth-logo.png" alt="InfoHealth AI Logo" style="height: 80px; max-width: 90%; object-fit: contain;">
+        <button class="translate-btn" id="translateBtn" onclick="toggleLanguage()">Español</button>
+        <img src="infohealth-logo.png" alt="InfoHealth AI Logo">
       </div>
 
-      <div class="cards-container">
-        <div class="cards-section" id="section1">
-          <h3>Medical Conditions</h3>
-          <div class="cards">
-            <div class="card" onclick="sendMessageWithClear('What is hypertension and how is it treated?')">Hypertension</div>
-            <div class="card" onclick="sendMessageWithClear('Explain high cholesterol causes and treatments')">Cholesterol</div>
-            <div class="card" onclick="sendMessageWithClear('What is heart disease and how is it managed?')">Heart Disease</div>
-            <div class="card" onclick="sendMessageWithClear('What is diabetes and how do I manage blood sugar?')">Diabetes</div>
-          </div>
-        </div>
-
-        <div class="cards-section" id="section2">
-          <h3>Health Management</h3>
-          <div class="cards">
-            <div class="card" onclick="showHealthCalendar()">Calendar</div>
-            <div class="card" onclick="showMyHealthInfo()">My Info</div>
-            <div class="card" onclick="showAppointments()">Appointments</div>
-            <div class="card" onclick="showMedications()">Medications</div>
-          </div>
-        </div>
-      </div>
+      <!-- Cards: will be rendered by renderCards() -->
+      <div class="cards-container" id="cardsContainer"></div>
 
       <div class="chat" id="chatBox">
-        <!-- Chat messages will appear here -->
+        <!-- Initial welcome (replaced on reset) -->
+        <div style="display:flex;align-items:flex-start;margin-bottom:.8rem;">
+          <div style="width:28px;height:28px;border-radius:50%;overflow:hidden;flex-shrink:0;margin-right:.4rem;">
+            <img src="infohealth-logo-small.png" alt="InfoHealth AI" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div style="background:#f8f9fa;border:1px solid #e0e0e0;border-radius:12px;padding:12px 16px;max-width:calc(75% - 32px);">
+            <span>Welcome to InfoHealth AI. I provide health information for educational purposes. Always consult healthcare professionals for diagnosis and treatment.</span>
+            <div class="ai-status" id="aiStatus">📚 Knowledge-Based Responses</div>
+          </div>
+        </div>
       </div>
 
       <div class="input-area">
         <input type="text" id="userInput" placeholder="Ask a medical question..." />
+        <select id="providerSelect" aria-label="Model provider">
+          <option value="auto">Auto</option>
+          <option value="openai">OpenAI</option>
+          <option value="anthropic">Claude</option>
+          <option value="gemini">Gemini</option>
+        </select>
         <button onclick="sendMessage()">Send</button>
-        <button class="home-btn" onclick="goHome()">🏠 Home</button>
-      </div>
-    </div>
       </div>
     </div>
   </div>
 
-  <!-- Health Management Modals -->
-  
-  <!-- Health Calendar Modal -->
-  <div id="calendarModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('calendarModal')">&times;</span>
-      <h2>📅 Health Calendar & Tracking</h2>
-      
-      <div class="form-group">
-        <label>Quick Health Reading Entry:</label>
-        <div class="health-reading-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr auto auto; gap: 10px;">
-          <input type="text" id="readingValue" placeholder="Reading (e.g., 140/90)">
-          <select id="readingType">
-            <option value="Blood Pressure">Blood Pressure</option>
-            <option value="Blood Sugar">Blood Sugar</option>
-            <option value="Weight">Weight</option>
-            <option value="Heart Rate">Heart Rate</option>
-          </select>
-          <input type="datetime-local" id="readingTime">
-          <button class="btn" onclick="addHealthReading()">Add</button>
-          <button class="btn-secondary" onclick="goHome()">🏠 Home</button>
-        </div>
-      </div>
-
-      <div class="health-card">
-        <h4>Recent Health Readings</h4>
-        <div id="healthReadings"></div>
-      </div>
-
-      <div class="health-card">
-        <h4>Health Goals This Week</h4>
-        <div class="form-group">
-          <input type="text" id="newGoal" placeholder="Add a health goal...">
-          <div style="display: flex; gap: 10px; margin-top: 10px;">
-            <button class="btn" onclick="addHealthGoal()">Add Goal</button>
-            <button class="btn-secondary" onclick="goHome()">🏠 Home</button>
-          </div>
-        </div>
-        <div id="healthGoals"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- My Health Info Modal -->
-  <div id="healthInfoModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('healthInfoModal')">&times;</span>
-      <h2>📋 My Health Information</h2>
-      
-      <div class="health-card">
-        <h4>Personal Information</h4>
-        <div class="form-group">
-          <label>Full Name:</label>
-          <input type="text" id="fullName" placeholder="Enter your full name">
-        </div>
-        <div class="form-group">
-          <label>Date of Birth:</label>
-          <input type="date" id="dateOfBirth">
-        </div>
-        <div class="form-group">
-          <label>Emergency Contact:</label>
-          <input type="text" id="emergencyContact" placeholder="Name and phone number">
-        </div>
-      </div>
-
-      <div class="health-card">
-        <h4>Medical Conditions</h4>
-        <div class="form-group">
-          <input type="text" id="newCondition" placeholder="Add medical condition...">
-          <button class="btn" onclick="addMedicalCondition()">Add</button>
-        </div>
-        <div id="medicalConditions"></div>
-      </div>
-
-      <div class="health-card">
-        <h4>Allergies</h4>
-        <div class="form-group">
-          <input type="text" id="newAllergy" placeholder="Add allergy...">
-          <button class="btn" onclick="addAllergy()">Add</button>
-        </div>
-        <div id="allergiesList"></div>
-      </div>
-
-      <div class="health-card">
-        <h4>Target Health Numbers</h4>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-          <div class="form-group">
-            <label>Blood Pressure Goal:</label>
-            <input type="text" id="bpGoal" placeholder="e.g., <130/80">
-          </div>
-          <div class="form-group">
-            <label>Cholesterol Goal:</label>
-            <input type="text" id="cholesterolGoal" placeholder="e.g., LDL <100">
-          </div>
-          <div class="form-group">
-            <label>Blood Sugar Goal:</label>
-            <input type="text" id="bsGoal" placeholder="e.g., HbA1c <7%">
-          </div>
-          <div class="form-group">
-            <label>Weight Goal:</label>
-            <input type="text" id="weightGoal" placeholder="e.g., 180 lbs">
-          </div>
-        </div>
-      </div>
-
-      <div style="display: flex; gap: 10px; margin-top: 15px;">
-        <button class="btn" onclick="saveHealthInfo()">Save Information</button>
-        <button class="btn-secondary" onclick="goHome()">🏠 Home</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Appointments Modal -->
-  <div id="appointmentsModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('appointmentsModal')">&times;</span>
-      <h2>🏥 Medical Appointments</h2>
-      
-      <div class="health-card">
-        <h4>Schedule New Appointment</h4>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-          <div class="form-group">
-            <label>Doctor/Clinic:</label>
-            <input type="text" id="doctorName" placeholder="Dr. Smith - Cardiologist">
-          </div>
-          <div class="form-group">
-            <label>Date & Time:</label>
-            <input type="datetime-local" id="appointmentTime">
-          </div>
-          <div class="form-group">
-            <label>Appointment Type:</label>
-            <select id="appointmentType">
-              <option value="Regular Checkup">Regular Checkup</option>
-              <option value="Follow-up">Follow-up</option>
-              <option value="Lab Work">Lab Work</option>
-              <option value="Specialist">Specialist</option>
-              <option value="Emergency">Emergency</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Phone Number:</label>
-            <input type="tel" id="doctorPhone" placeholder="(555) 123-4567">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Notes/Reason:</label>
-          <textarea id="appointmentNotes" placeholder="Reason for visit, questions to ask, etc."></textarea>
-        </div>
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
-          <button class="btn" onclick="addAppointment()">Schedule Appointment</button>
-          <button class="btn-secondary" onclick="goHome()">🏠 Home</button>
-        </div>
-      </div>
-
-      <div class="health-card">
-        <h4>Upcoming Appointments</h4>
-        <div id="upcomingAppointments"></div>
-      </div>
-
-      <div class="health-card">
-        <h4>Past Appointments</h4>
-        <div id="pastAppointments"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Medications Modal -->
-  <div id="medicationsModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('medicationsModal')">&times;</span>
-      <h2>💊 Medication Management</h2>
-      
-      <div class="health-card">
-        <h4>Add New Medication</h4>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
-          <div class="form-group">
-            <label>Medication Name:</label>
-            <input type="text" id="medicationName" placeholder="Lisinopril">
-          </div>
-          <div class="form-group">
-            <label>Dosage:</label>
-            <input type="text" id="medicationDosage" placeholder="10mg">
-          </div>
-          <div class="form-group">
-            <label>Frequency:</label>
-            <select id="medicationFrequency">
-              <option value="Once daily">Once daily</option>
-              <option value="Twice daily">Twice daily</option>
-              <option value="Three times daily">Three times daily</option>
-              <option value="Four times daily">Four times daily</option>
-              <option value="As needed">As needed</option>
-            </select>
-          </div>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
-          <div class="form-group">
-            <label>Time to Take:</label>
-            <input type="time" id="medicationTime">
-          </div>
-          <div class="form-group">
-            <label>Prescribing Doctor:</label>
-            <input type="text" id="prescribingDoctor" placeholder="Dr. Johnson">
-          </div>
-          <div class="form-group">
-            <label>Pharmacy:</label>
-            <input type="text" id="pharmacy" placeholder="CVS Pharmacy">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Notes/Instructions:</label>
-          <textarea id="medicationNotes" placeholder="Take with food, side effects, etc."></textarea>
-        </div>
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
-          <button class="btn" onclick="addMedication()">Add Medication</button>
-          <button class="btn-secondary" onclick="goHome()">🏠 Home</button>
-        </div>
-      </div>
-
-      <div class="health-card">
-        <h4>Current Medications</h4>
-        <div id="currentMedications"></div>
-      </div>
-
-      <div class="health-card">
-        <h4>Medication Reminders</h4>
-        <div id="medicationReminders">
-          <p><strong>💡 Tip:</strong> Set phone alarms for your medication times!</p>
-        </div>
-      </div>
+  <!-- Consent (first run) -->
+  <div id="consent" class="consent" hidden>
+    <div class="consent-card">
+      <h3>InfoHealth AI – Notice</h3>
+      <p>This app provides educational health information and does not replace professional medical advice. Content may be AI-generated. Do not use for emergencies.</p>
+      <label style="display:flex;gap:.5rem;align-items:center;margin:.75rem 0;">
+        <input type="checkbox" id="consentAgree"> I understand and agree.
+      </label>
+      <button class="btn" id="consentContinue" disabled>Continue</button>
     </div>
   </div>
 
   <script>
-    // Splash Screen Logic
-    window.addEventListener('load', function() {
-      const splashScreen = document.getElementById('splashScreen');
-      const mainApp = document.getElementById('mainApp');
-      
-      // Show splash screen for 3 seconds
-      setTimeout(() => {
-        splashScreen.classList.add('fade-out');
-        mainApp.classList.add('show');
-        
-        // Remove splash screen from DOM after transition
-        setTimeout(() => {
-          splashScreen.style.display = 'none';
-        }, 1000);
-      }, 3000);
-    });
+    // Backend URL
+    window.API_BASE = 'https://us-central1-infomed-ai-93048102.cloudfunctions.net/chat';
 
-    const chatBox = document.getElementById('chatBox');
-    const userInput = document.getElementById('userInput');
+    // ---------- Utilities & globals ----------
+    const $ = (sel, root=document) => root.querySelector(sel);
+    const chatBox = $('#chatBox');
+    const userInput = $('#userInput');
+    let aiStatusEl = $('#aiStatus');
+    let lang = 'en';        // 'en' | 'es'
+    let sessionCounter = 0; // cancels stale replies
 
-    // Clear chat function
-    function clearChat() {
-      chatBox.innerHTML = '';
+    const store = {
+      get(k, def) { try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; } },
+      set(k, v)   { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+      uid()       { return Math.random().toString(36).slice(2, 10); }
+    };
+    const esc = s => (s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    function mdToHtml(md='') {
+      return md.replace(/\r/g,'').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n{2,}/g,'\n\n').replace(/\n/g,'<br>');
     }
-
-    // Home function - clears chat and closes any open modals
-    function goHome() {
-      // Clear the chat
-      clearChat();
-      
-      // Close any open modals
-      const modals = document.querySelectorAll('.modal');
-      modals.forEach(modal => {
-        modal.style.display = 'none';
-      });
-      
-      // Clear the input field
-      userInput.value = '';
-      
-      // Show a clean welcome message
-      setTimeout(() => {
-        addBubble('🏠 Welcome back to InfoHealth AI! Choose a medical condition above to learn more, or use the Health Management tools to track your health data. You can also ask me any medical questions.', 'bot', false);
-      }, 100);
-    }
-
-    // Add message function with typewriter effect
-    function addBubble(text, role, useTypewriter = false) {
+    function addBubble(role, html) {
       const wrap = document.createElement('div');
-      wrap.className = 'bubble-wrapper ' + role;
-
-      const avatar = role === 'user' 
-        ? 'infohealth-user-logo.png'
-        : 'infohealth-logo-small.png';
-
-      wrap.innerHTML = '<div class="avatar"><img src="' + avatar + '" alt="' + role + '" /></div><div class="message"></div>';
-      
-      const messageDiv = wrap.querySelector('.message');
+      wrap.className = `bubble-wrapper ${role}`;
+      wrap.innerHTML = `
+        <div class="avatar"><img src="${role==='user'?'user-avatar.png':'infohealth-logo-small.png'}" alt=""></div>
+        <div class="message">${html}</div>`;
       chatBox.appendChild(wrap);
+      chatBox.scrollTop = chatBox.scrollHeight;
+      return wrap;
+    }
+    function addHomeActionBubble() {
+      addBubble('bot', `<div><button class="btn-home" onclick="goHome()">🏠 ${lang==='es'?'Inicio':'Home'}</button></div>`);
+    }
+    function setAIStatus(txt) { if (aiStatusEl) aiStatusEl.textContent = txt; }
+    function addDisclaimerBelow(msgEl) {
+      const wrap = document.createElement('div');
+      wrap.style.cssText = "margin-top:.5rem;font-size:.72rem;color:#666;";
+      wrap.textContent = (lang==='es')
+        ? "Educativo • No es consejo médico • Escriba “fuentes” si desea referencias."
+        : "Educational only • Not medical advice • Type “sources” if you want references.";
+      msgEl.parentElement.appendChild(wrap);
+    }
 
-      // Add home button to bot responses (but not to the welcome message)
-      const shouldAddHomeButton = role === 'bot' && !text.includes('🏠 Welcome back');
-      const finalText = shouldAddHomeButton ? text + '<br><br><div style="text-align: center; margin-top: 15px;"><button class="btn-secondary" onclick="goHome()" style="padding: 8px 16px; border-radius: 20px; font-size: 0.85rem;">🏠 Back to Home</button></div>' : text;
+    // ----- CSV helpers -----
+    function downloadFile(name, content, mime = 'text/csv') {
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
+    }
+    function csvEscape(cell='') { const s = String(cell ?? ''); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; }
+    function makeCSV(headers, rows) { return headers.map(csvEscape).join(',') + '\n' + rows.map(r => r.map(csvEscape).join(',')).join('\n'); }
+    function exportMedsCSV() {
+      const meds = store.get('meds', []);
+      const headers = ['id','name','dose','frequency','start','notes'];
+      const rows = meds.map(m => [m.id, m.name, m.dose, m.freq, m.start, m.notes]);
+      downloadFile(`medications_${new Date().toISOString().slice(0,10)}.csv`, makeCSV(headers, rows));
+    }
+    function exportApptsCSV() {
+      const appts = store.get('appts', []);
+      const headers = ['id','date','time','provider','location','notes'];
+      const rows = appts.map(a => [a.id, a.date, a.time, a.provider, a.location, a.notes]);
+      downloadFile(`appointments_${new Date().toISOString().slice(0,10)}.csv`, makeCSV(headers, rows));
+    }
+    function exportTrackerCSV() {
+      const tr = store.get('tracker', { bp:[], glucose:[], weight:[] });
+      const headers = ['type','date','time','value1','value2','value3','notes'];
+      const rows = [];
+      tr.bp.forEach(r => rows.push(['bp', r.date, r.time, r.sys, r.dia, r.pulse ?? '', r.notes ?? '']));
+      tr.glucose.forEach(r => rows.push(['glucose', r.date, r.time, r.value, '', '', r.notes ?? '']));
+      tr.weight.forEach(r => rows.push(['weight', r.date, r.time, r.value, '', '', r.notes ?? '']));
+      downloadFile(`health_tracker_${new Date().toISOString().slice(0,10)}.csv`, makeCSV(headers, rows));
+    }
 
-      if (useTypewriter && role === 'bot') {
-        // Typewriter effect for bot responses
-        let i = 0;
-        const speed = 10; // milliseconds per character
-        
-        function typeWriter() {
-          if (i < finalText.length) {
-            messageDiv.innerHTML = finalText.substring(0, i + 1);
-            i++;
-            setTimeout(typeWriter, speed);
-            // Auto-scroll as we type
-            chatBox.scrollTop = chatBox.scrollHeight;
+    // --- typewriter & reset ---
+    function typeWriter(el, htmlString, speed = 14, done) {
+      const plain = htmlString.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ');
+      el.textContent = '';
+      let i = 0;
+      (function step() {
+        if (i < plain.length) {
+          el.textContent += plain[i++];
+          chatBox.scrollTop = chatBox.scrollHeight;
+          setTimeout(step, speed);
+        } else { el.innerHTML = htmlString; if (typeof done === 'function') done(); }
+      })();
+    }
+    function resetChat() {
+      chatBox.innerHTML = `
+        <div style="display:flex;align-items:flex-start;margin-bottom:.8rem;">
+          <div style="width:28px;height:28px;border-radius:50%;overflow:hidden;flex-shrink:0;margin-right:.4rem;">
+            <img src="infohealth-logo-small.png" alt="InfoHealth AI" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div style="background:#f8f9fa;border:1px solid #e0e0e0;border-radius:12px;padding:12px 16px;max-width:calc(75% - 32px);">
+            <span>${lang==='es'
+              ? 'Bienvenido a InfoHealth AI. Proporciono información de salud con fines educativos. Siempre consulte a profesionales de la salud para el diagnóstico y tratamiento.'
+              : 'Welcome to InfoHealth AI. I provide health information for educational purposes. Always consult healthcare professionals for diagnosis and treatment.'}</span>
+            <div class="ai-status" id="aiStatus">${lang==='es' ? '📚 Respuestas basadas en conocimiento' : '📚 Knowledge-Based Responses'}</div>
+          </div>
+        </div>`;
+      aiStatusEl = document.getElementById('aiStatus');
+    }
+    function sectionWrap(innerHtml) {
+      return `
+        <div class="form-container">
+          ${innerHtml}
+          <div style="margin-top:1rem;text-align:center;">
+            <button class="btn-home" onclick="goHome()">🏠 ${lang==='es'?'Inicio':'Home'}</button>
+          </div>
+        </div>`;
+    }
+
+    // ---------- API ----------
+    async function callChat(message, specialty, extraPrefer = {}) {
+      const providerSel = document.getElementById('providerSelect');
+      const prefer = { lang, provider: providerSel?.value || 'auto', ...extraPrefer };
+      const t0 = performance.now();
+      const r = await fetch(window.API_BASE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, specialty, prefer })
+      });
+      const ms = Math.round(performance.now() - t0);
+      if (!r.ok) throw new Error(await r.text());
+      const data = await r.json();
+      data.latencyMs = ms;
+      return data;
+    }
+
+    // ---------- Fallback knowledge ----------
+    const EXTRA = {
+      hypertension: ["beta blocker","beta-blocker","metoprolol","atenolol","carvedilol","propranolol","nadolol","bisoprolol","ace inhibitor","lisinopril","benazepril","enalapril","ramipril","captopril","arb","losartan","valsartan","olmesartan","irbesartan","telmisartan","calcium channel blocker","amlodipine","diltiazem","verapamil","nifedipine","thiazide","hydrochlorothiazide","hctz","chlorthalidone","indapamide"],
+      cholesterol: ["statin","atorvastatin","rosuvastatin","simvastatin","pravastatin","lovastatin","pitavastatin","ezetimibe","pcsk9","alirocumab","evolocumab","bempedoic","inclisiran"],
+      asthma: ["saba","albuterol","levalbuterol","rescue inhaler","controller inhaler","ics","budesonide","fluticasone","laba","formoterol","salmeterol","montelukast","leukotriene"],
+      diabetes: ["metformin","insulin","glp-1","semaglutide","ozempic","rybelsus","tirzepatide","mounjaro","trulicity","sglt2","empagliflozin","jardiance","dapagliflozin","farxiga","canagliflozin","sulfonylurea","glipizide","glyburide","glimepiride"]
+    };
+    function fb(title, lines){ return `<strong>${esc(title)}</strong><br>${lines.map(l=>`• ${esc(l)}`).join('<br>')}`; }
+    function getMedicalResponse(topic) {
+      const t = topic.toLowerCase();
+      const es = (en, es) => (lang==='es'? es : en);
+
+      if (t.includes('hypertension') || EXTRA.hypertension.some(k=>t.includes(k))) {
+        return [
+          fb(es("What it is","Qué es"), es(["Consistently elevated blood pressure that increases heart/kidney/stroke risk."], ["Presión arterial elevada de forma constante que aumenta el riesgo cardíaco, renal y de ACV."])),
+          fb(es("Targets","Objetivos"), es(["<120/80 normal","<130/80 often goal with risk factors—follow clinician guidance."], ["<120/80 normal","<130/80 suele ser objetivo con factores de riesgo—siga indicaciones clínicas."])),
+          fb(es("First steps","Primeros pasos"), es(["DASH diet, sodium <1,500–2,300 mg/day","Weight loss, exercise, limit alcohol, stop smoking"], ["Dieta DASH, sodio <1,500–2,300 mg/día","Bajar de peso, ejercicio, limitar alcohol, dejar de fumar"])),
+          fb(es("Meds (common)","Fármacos (comunes)"), es(["Thiazides (HCTZ, chlorthalidone)","ACEi (lisinopril)","ARB (losartan)","CCB (amlodipine)"], ["Tiazidas (HCTZ, clortalidona)","IECA (lisinopril)","ARA-II (losartán)","Calcioantagonista (amlodipino)"])),
+          fb(es("When to seek care","Cuándo consultar"), es(["Severe headache, chest pain, shortness of breath, neuro symptoms → urgent care/ER"], ["Cefalea intensa, dolor torácico, falta de aire, síntomas neurológicos → urgencias"]))
+        ].join('<br><br>');
+      }
+      if (t.includes('cholesterol') || EXTRA.cholesterol.some(k=>t.includes(k))) {
+        return [
+          fb(es("What it is","Qué es"), es(["High LDL (bad) raises atherosclerosis risk."], ["LDL alto aumenta el riesgo de aterosclerosis."])),
+          fb(es("Lifestyle","Estilo de vida"), es(["Mediterranean eating pattern","150+ min/week exercise","Avoid trans fats"], ["Patrón mediterráneo","Ejercicio 150+ min/sem","Evitar grasas trans"])),
+          fb(es("Meds","Fármacos"), es(["Statins first-line","Ezetimibe/PCSK9 if not at goal"], ["Estatinas primera línea","Ezetimiba/PCSK9 si no se alcanza el objetivo"])),
+          fb(es("When to seek care","Cuándo consultar"), es(["Chest pain, neuro deficits, leg pain with exertion"], ["Dolor torácico, déficits neurológicos, dolor de piernas al esfuerzo"]))
+        ].join('<br><br>');
+      }
+      if (t.includes('asthma') || EXTRA.asthma.some(k=>t.includes(k))) {
+        return [
+          fb(es("What it is","Qué es"), es(["Chronic airway inflammation with variable wheeze/cough/short breath."], ["Inflamación crónica de vías respiratorias con sibilancias/tos/disnea."])),
+          fb(es("Control","Control"), es(["Daily ICS controller; SABA for rescue","Trigger avoidance; action plan"], ["ICS diario de control; SABA de rescate","Evitar desencadenantes; plan de acción"])),
+          fb(es("Red flags","Signos de alarma"), es(["Rescue inhaler >2×/wk, nighttime symptoms, peak flow drop"], ["Rescate >2×/sem, síntomas nocturnos, descenso de peak flow"]))
+        ].join('<br><br>');
+      }
+      if (t.includes('diabetes') || EXTRA.diabetes.some(k=>t.includes(k))) {
+        return [
+          fb(es("What it is","Qué es"), es(["High blood glucose (type 1/2) with long-term risks."], ["Glucosa elevada (tipo 1/2) con riesgos a largo plazo."])),
+          fb(es("Core management","Manejo básico"), es(["A1c goal individualized (often <7%)","Diet, activity, weight management"], ["Meta de A1c individual (a menudo <7%)","Dieta, actividad, control de peso"])),
+          fb(es("Meds","Fármacos"), es(["Metformin first-line (type 2)","GLP-1, SGLT2, insulin as indicated"], ["Metformina primera línea (tipo 2)","GLP-1, SGLT2, insulina según indicación"])),
+          fb(es("Urgent care","Urgencias"), es(["Confusion, fruity breath, vomiting, severe dehydration → ER"], ["Confusión, aliento afrutado, vómitos, deshidratación grave → urgencias"]))
+        ].join('<br><br>');
+      }
+      return fb(es("General health info","Información general"),
+        es(["I couldn’t reach the AI right now; here’s general guidance.","For diagnosis/treatment decisions, contact your clinician."],
+           ["No pude contactar la IA; aquí hay orientación general.","Para diagnóstico/tratamiento, consulte a su médico."]));
+    }
+
+    // ---------- Cards renderer (dynamic i18n) ----------
+    function renderCards() {
+      const dict = {
+        en: {
+          sections: { cond: 'Medical Conditions', manage: 'Health Management', tools: 'Health Tools' },
+          cards: {
+            hypertension: 'Hypertension', cholesterol: 'Cholesterol', asthma: 'Asthma', diabetes: 'Diabetes',
+            calendar: 'Calendar', myinfo: 'My Info', appointments: 'Appointments', medications: 'Medications',
+            drugchecker: 'Drug Checker', tracker: 'Health Tracker', reminders: 'Reminders', emergency: 'Emergency'
+          },
+          prompts: {
+            htn: 'What is hypertension and how is it treated?',
+            chol: 'Explain high cholesterol causes and treatments',
+            asthma: 'How is asthma diagnosed and managed?',
+            dm: 'What is diabetes and how do I manage blood sugar?'
+          }
+        },
+        es: {
+          sections: { cond: 'Condiciones Médicas', manage: 'Gestión de Salud', tools: 'Herramientas de Salud' },
+          cards: {
+            hypertension: 'Hipertensión', cholesterol: 'Colesterol', asthma: 'Asma', diabetes: 'Diabetes',
+            calendar: 'Calendario', myinfo: 'Mi Información', appointments: 'Citas', medications: 'Medicamentos',
+            drugchecker: 'Comprobador de fármacos', tracker: 'Registro de salud', reminders: 'Recordatorios', emergency: 'Emergencia'
+          },
+          prompts: {
+            htn: '¿Qué es la hipertensión y cómo se trata?',
+            chol: 'Explica las causas y tratamientos del colesterol alto',
+            asthma: '¿Cómo se diagnostica y se maneja el asma?',
+            dm: '¿Qué es la diabetes y cómo manejo la glucosa en sangre?'
           }
         }
-        typeWriter();
-      } else {
-        // Instant display for user messages and welcome messages
-        messageDiv.innerHTML = finalText;
-        setTimeout(() => {
-          chatBox.scrollTop = chatBox.scrollHeight;
-        }, 100);
-      }
+      };
+      const L = (lang === 'es') ? dict.es : dict.en;
+
+      const html = `
+        <div class="cards-section">
+          <h3>${L.sections.cond}</h3>
+          <div class="cards">
+            <div class="card" tabindex="0" aria-label="${L.cards.hypertension}" onclick="sendMessage('${L.prompts.htn.replace(/'/g, "\\'")}')">${L.cards.hypertension}</div>
+            <div class="card" tabindex="0" aria-label="${L.cards.cholesterol}" onclick="sendMessage('${L.prompts.chol.replace(/'/g, "\\'")}')">${L.cards.cholesterol}</div>
+            <div class="card" tabindex="0" aria-label="${L.cards.asthma}" onclick="sendMessage('${L.prompts.asthma.replace(/'/g, "\\'")}')">${L.cards.asthma}</div>
+            <div class="card" tabindex="0" aria-label="${L.cards.diabetes}" onclick="sendMessage('${L.prompts.dm.replace(/'/g, "\\'")}')">${L.cards.diabetes}</div>
+          </div>
+        </div>
+
+        <div class="cards-section">
+          <h3>${L.sections.manage}</h3>
+          <div class="cards">
+            <div class="card" tabindex="0" aria-label="${L.cards.calendar}" onclick="showCalendar()">${L.cards.calendar}</div>
+            <div class="card" tabindex="0" aria-label="${L.cards.myinfo}" onclick="showMyInfo()">${L.cards.myinfo}</div>
+            <div class="card" tabindex="0" aria-label="${L.cards.appointments}" onclick="showAppointments()">${L.cards.appointments}</div>
+            <div class="card" tabindex="0" aria-label="${L.cards.medications}" onclick="showMedications()">${L.cards.medications}</div>
+          </div>
+        </div>
+
+        <div class="cards-section">
+          <h3>${L.sections.tools}</h3>
+          <div class="cards">
+            <div class="card" tabindex="0" aria-label="${L.cards.drugchecker}" onclick="showDrugChecker()">${L.cards.drugchecker}</div>
+            <div class="card" tabindex="0" aria-label="${L.cards.tracker}" onclick="showHealthTracker()">${L.cards.tracker}</div>
+            <div class="card" tabindex="0" aria-label="${L.cards.reminders}" onclick="showReminders()">${L.cards.reminders}</div>
+            <div class="card" tabindex="0" aria-label="${L.cards.emergency}" onclick="showEmergencyInfo()">${L.cards.emergency}</div>
+          </div>
+        </div>
+      `;
+      const container = document.getElementById('cardsContainer');
+      if (container) container.innerHTML = html;
     }
 
-    // Enhanced comprehensive medical responses with natural language processing
-    function getMedicalResponse(query) {
-      const disclaimer = '<div style="background-color: #f0f8ff; border-left: 4px solid #DAA520; padding: 10px; margin-bottom: 15px; font-weight: bold; color: #2c5aa0;">⚠️ Consult healthcare professionals for medical advice.</div>';
-      const queryLower = query.toLowerCase();
-      
-      // HYPERTENSION / BLOOD PRESSURE QUERIES
-      if (queryLower.includes('hypertension') || queryLower.includes('blood pressure') || 
-          queryLower.includes('high bp') || queryLower.includes('bp is high') ||
-          queryLower.includes('pressure medication') || queryLower.includes('systolic') ||
-          queryLower.includes('diastolic') || queryLower.includes('lower blood pressure') ||
-          queryLower.includes('reduce blood pressure') || queryLower.includes('bp medication') ||
-          queryLower.includes('blood pressure natural') || queryLower.includes('bp reading') ||
-          queryLower.includes('pressure check') || queryLower.includes('pressure management') ||
-          queryLower.includes('ace inhibitor') || queryLower.includes('beta blocker') ||
-          queryLower.includes('diuretic') || queryLower.includes('calcium channel') ||
-          queryLower.includes('sodium intake') || queryLower.includes('salt') ||
-          (queryLower.includes('my') && queryLower.includes('pressure') && queryLower.includes('high'))) {
-        
-        return disclaimer + '<img src="medical-professional-1.jpg" alt="Blood Pressure Management" class="medical-image"><br><strong>COMPREHENSIVE HYPERTENSION MANAGEMENT GUIDE</strong><br><br><strong>Blood Pressure Classification (2017 AHA/ACC Guidelines):</strong><br><br><ul><li><strong>Normal:</strong> Less than 120/80 mmHg</li><li><strong>Elevated:</strong> Systolic 120-129 AND diastolic less than 80 mmHg</li><li><strong>Stage 1 Hypertension:</strong> Systolic 130-139 OR diastolic 80-89 mmHg</li><li><strong>Stage 2 Hypertension:</strong> Systolic 140/90 mmHg or higher</li><li><strong>Hypertensive Crisis:</strong> Systolic over 180 AND/OR diastolic over 120 mmHg (EMERGENCY - Call 911)</li></ul><br><strong>Natural Ways to Lower Blood Pressure:</strong><ul><li><strong>Diet:</strong> Reduce sodium to under 2.3g daily (1 teaspoon salt)</li><li><strong>Exercise:</strong> 150 minutes moderate activity weekly (brisk walking)</li><li><strong>Weight:</strong> Lose even 5-10 pounds if overweight</li><li><strong>Stress:</strong> Deep breathing, meditation, yoga</li><li><strong>Sleep:</strong> 7-9 hours nightly, treat sleep apnea</li><li><strong>Alcohol:</strong> Limit to 1 drink/day (women), 2 drinks/day (men)</li><li><strong>Quit Smoking:</strong> Smoking immediately raises BP</li></ul><br><strong>Common Blood Pressure Medications:</strong><ul><li><strong>ACE Inhibitors:</strong> Lisinopril, enalapril (end in -pril)</li><li><strong>ARBs:</strong> Losartan, valsartan (end in -sartan)</li><li><strong>Beta Blockers:</strong> Metoprolol, atenolol (end in -lol)</li><li><strong>Calcium Channel Blockers:</strong> Amlodipine, nifedipine</li><li><strong>Diuretics:</strong> Hydrochlorothiazide (HCTZ), chlorthalidone</li></ul><br><strong>🚨 WHEN TO CALL 911:</strong><ul><li>BP over 180/120 with symptoms</li><li>Severe headache with vision changes</li><li>Chest pain or shortness of breath</li><li>Numbness, weakness, trouble speaking</li><li>Severe nosebleeds with other symptoms</li></ul><br><strong>Home Monitoring Tips:</strong><ul><li>Check same time daily (morning preferred)</li><li>Sit quietly 5 minutes before measuring</li><li>Use properly sized cuff on bare arm</li><li>Take 2-3 readings, average them</li><li>Keep a log to share with your doctor</li></ul>';
-      }
-
-      // CHOLESTEROL QUERIES
-      if (queryLower.includes('cholesterol') || queryLower.includes('ldl') || queryLower.includes('hdl') ||
-          queryLower.includes('triglyceride') || queryLower.includes('statin') || queryLower.includes('lipid') ||
-          queryLower.includes('atorvastatin') || queryLower.includes('simvastatin') || queryLower.includes('rosuvastatin') ||
-          queryLower.includes('crestor') || queryLower.includes('lipitor') || queryLower.includes('zocor') ||
-          queryLower.includes('cholesterol diet') || queryLower.includes('lower cholesterol') ||
-          queryLower.includes('cholesterol natural') || queryLower.includes('good cholesterol') ||
-          queryLower.includes('bad cholesterol') || queryLower.includes('cholesterol level') ||
-          queryLower.includes('cholesterol medication') || queryLower.includes('cholesterol side effects') ||
-          (queryLower.includes('my') && queryLower.includes('cholesterol') && queryLower.includes('high'))) {
-        
-        return disclaimer + '<img src="medical-professional-2.jpg" alt="Cholesterol Management" class="medical-image"><br><strong>COMPREHENSIVE CHOLESTEROL MANAGEMENT</strong><br><br><strong>Understanding Your Cholesterol Numbers:</strong><ul><li><strong>Total Cholesterol:</strong> Less than 200 mg/dL (Optimal)</li><li><strong>LDL ("Bad") Cholesterol:</strong> Less than 100 mg/dL (less than 70 if high risk)</li><li><strong>HDL ("Good") Cholesterol:</strong> 40+ mg/dL (men), 50+ mg/dL (women)</li><li><strong>Triglycerides:</strong> Less than 150 mg/dL</li></ul><br><strong>Natural Ways to Lower Cholesterol:</strong><ul><li><strong>Soluble Fiber:</strong> Oats, beans, apples, barley (5-10g daily)</li><li><strong>Healthy Fats:</strong> Olive oil, avocados, nuts, fatty fish</li><li><strong>Plant Sterols:</strong> Fortified foods, supplements (2g daily)</li><li><strong>Exercise:</strong> 150 minutes weekly raises HDL, lowers LDL</li><li><strong>Weight Loss:</strong> Even 5-10 pounds improves cholesterol</li><li><strong>Limit Saturated Fat:</strong> Less than 7% of daily calories</li><li><strong>Avoid Trans Fats:</strong> Check labels for "partially hydrogenated"</li></ul><br><strong>Foods That Lower Cholesterol:</strong><ul><li><strong>Oatmeal & Oat Bran:</strong> Beta-glucan fiber</li><li><strong>Nuts:</strong> Almonds, walnuts, pistachios (1 oz daily)</li><li><strong>Fatty Fish:</strong> Salmon, mackerel, sardines (2x weekly)</li><li><strong>Beans & Legumes:</strong> High soluble fiber</li><li><strong>Eggplant & Okra:</strong> Low-calorie soluble fiber</li><li><strong>Fruits:</strong> Apples, grapes, strawberries, citrus</li></ul><br><strong>Statin Medications:</strong><ul><li><strong>Common Statins:</strong> Atorvastatin (Lipitor), Simvastatin (Zocor), Rosuvastatin (Crestor)</li><li><strong>Benefits:</strong> Reduce LDL 25-50%, prevent heart attacks/strokes</li><li><strong>Side Effects:</strong> Muscle pain (5-10%), liver enzyme elevation (rare)</li><li><strong>When to Take:</strong> Usually evening (cholesterol made at night)</li><li><strong>Monitoring:</strong> Liver tests at start, then as needed</li></ul><br><strong>🚨 EMERGENCY SIGNS:</strong><ul><li>Severe muscle pain with dark urine (rhabdomyolysis)</li><li>Unexplained muscle weakness</li><li>Triglycerides over 1000 mg/dL (pancreatitis risk)</li></ul><br><strong>Cholesterol Testing Schedule:</strong><ul><li><strong>Adults 20+:</strong> Every 5 years if normal</li><li><strong>High Risk:</strong> Every 6-12 months</li><li><strong>On Medication:</strong> 6-8 weeks after starting, then every 3-6 months</li></ul>';
-      }
-
-      // HEART DISEASE QUERIES
-      if (queryLower.includes('heart disease') || queryLower.includes('heart attack') || queryLower.includes('cardiac') ||
-          queryLower.includes('coronary') || queryLower.includes('chest pain') || queryLower.includes('angina') ||
-          queryLower.includes('heart failure') || queryLower.includes('arrhythmia') || queryLower.includes('atrial fibrillation') ||
-          queryLower.includes('heart healthy') || queryLower.includes('cardiovascular') || queryLower.includes('heart medication') ||
-          queryLower.includes('aspirin') || queryLower.includes('blood thinner') || queryLower.includes('heart symptoms') ||
-          queryLower.includes('heart prevention') || queryLower.includes('heart risk') || queryLower.includes('heart diet') ||
-          queryLower.includes('heart rate') || queryLower.includes('palpitation') || queryLower.includes('shortness of breath') ||
-          queryLower.includes('fatigue') || queryLower.includes('swelling') || queryLower.includes('edema') ||
-          (queryLower.includes('chest') && queryLower.includes('pain')) ||
-          (queryLower.includes('heart') && (queryLower.includes('hurt') || queryLower.includes('problem')))) {
-        
-        return disclaimer + '<img src="medical-professional-3.jpg" alt="Heart Disease Management" class="medical-image"><br><strong>COMPREHENSIVE HEART DISEASE MANAGEMENT</strong><br><br><strong>Types of Heart Disease:</strong><ul><li><strong>Coronary Artery Disease:</strong> Blocked arteries to heart muscle</li><li><strong>Heart Attack (MI):</strong> Complete blockage of heart artery</li><li><strong>Heart Failure:</strong> Heart can\'t pump effectively</li><li><strong>Arrhythmias:</strong> Irregular heart rhythms</li><li><strong>Valve Disease:</strong> Problems with heart valves</li></ul><br><strong>🚨 HEART ATTACK WARNING SIGNS - CALL 911:</strong><ul><li><strong>Chest Pain:</strong> Pressure, squeezing, fullness lasting 2+ minutes</li><li><strong>Pain Spreads To:</strong> Left arm, jaw, neck, back, stomach</li><li><strong>Other Symptoms:</strong> Shortness of breath, sweating, nausea</li><li><strong>Women May Have:</strong> Fatigue, indigestion, upper back pain</li><li><strong>Time Matters:</strong> "Time is muscle" - get help immediately</li></ul><br><strong>Heart-Healthy Lifestyle:</strong><ul><li><strong>Mediterranean Diet:</strong> Olive oil, fish, fruits, vegetables, whole grains</li><li><strong>Exercise:</strong> 150 minutes moderate or 75 minutes vigorous weekly</li><li><strong>Don\'t Smoke:</strong> Smoking doubles heart disease risk</li><li><strong>Manage Stress:</strong> Meditation, deep breathing, social support</li><li><strong>Sleep Well:</strong> 7-9 hours nightly</li><li><strong>Limit Alcohol:</strong> 1 drink/day (women), 2 drinks/day (men)</li></ul><br><strong>Common Heart Medications:</strong><ul><li><strong>Aspirin:</strong> 81mg daily prevents blood clots</li><li><strong>Beta Blockers:</strong> Slow heart rate, reduce workload</li><li><strong>ACE Inhibitors:</strong> Lower blood pressure, protect heart</li><li><strong>Statins:</strong> Lower cholesterol, stabilize plaques</li><li><strong>Blood Thinners:</strong> Prevent dangerous clots</li></ul><br><strong>Heart Failure Symptoms:</strong><ul><li><strong>Shortness of Breath:</strong> Especially lying flat or with activity</li><li><strong>Fatigue:</strong> Less energy for normal activities</li><li><strong>Swelling:</strong> Feet, ankles, legs, abdomen</li><li><strong>Rapid Weight Gain:</strong> 2-3 pounds in 24 hours</li><li><strong>Persistent Cough:</strong> Especially with white/pink phlegm</li></ul><br><strong>When to Seek Emergency Care:</strong><ul><li>Any chest pain lasting over 5 minutes</li><li>Severe shortness of breath at rest</li><li>Fainting or near-fainting</li><li>Rapid heart rate over 150 with symptoms</li><li>Sudden severe swelling</li></ul>';
-      }
-
-      // DIABETES QUERIES
-      if (queryLower.includes('diabetes') || queryLower.includes('blood sugar') || queryLower.includes('glucose') ||
-          queryLower.includes('insulin') || queryLower.includes('diabetic') || queryLower.includes('a1c') ||
-          queryLower.includes('metformin') || queryLower.includes('hypoglycemia') || queryLower.includes('hyperglycemia') ||
-          queryLower.includes('type 1') || queryLower.includes('type 2') || queryLower.includes('blood glucose') ||
-          queryLower.includes('sugar level') || queryLower.includes('diabetic diet') || queryLower.includes('carbs') ||
-          queryLower.includes('carbohydrate') || queryLower.includes('ketoacidosis') || queryLower.includes('dka') ||
-          queryLower.includes('sugar high') || queryLower.includes('sugar low') || queryLower.includes('glucose meter') ||
-          queryLower.includes('blood test') || queryLower.includes('prediabetes') || queryLower.includes('gestational diabetes') ||
-          (queryLower.includes('my') && queryLower.includes('sugar') && (queryLower.includes('high') || queryLower.includes('low'))) ||
-          (queryLower.includes('blood') && queryLower.includes('sugar') && (queryLower.includes('control') || queryLower.includes('manage')))) {
-        
-        return disclaimer + '<img src="medical-professional-4.jpg" alt="Diabetes Management" class="medical-image"><br><strong>COMPREHENSIVE DIABETES MANAGEMENT GUIDE</strong><br><br><strong>Blood Sugar Target Ranges:</strong><ul><li><strong>Before Meals:</strong> 80-130 mg/dL</li><li><strong>2 Hours After Meals:</strong> Less than 180 mg/dL</li><li><strong>HbA1c Goal:</strong> Less than 7% for most adults</li><li><strong>Bedtime:</strong> 100-140 mg/dL</li></ul><br><strong>Type 1 vs Type 2 Diabetes:</strong><ul><li><strong>Type 1:</strong> Body doesn\'t make insulin (autoimmune), needs insulin shots</li><li><strong>Type 2:</strong> Body doesn\'t use insulin well, may need pills or insulin</li><li><strong>Prediabetes:</strong> Blood sugar higher than normal but not diabetic yet</li><li><strong>Gestational:</strong> Diabetes during pregnancy</li></ul><br><strong>Blood Sugar Control Tips:</strong><ul><li><strong>Check Regularly:</strong> Before meals, 2 hours after, bedtime</li><li><strong>Take Medications:</strong> As prescribed, same time daily</li><li><strong>Count Carbs:</strong> 45-60g per meal, consistent timing</li><li><strong>Exercise Daily:</strong> 30 minutes helps lower blood sugar</li><li><strong>Stay Hydrated:</strong> Drink water, avoid sugary drinks</li><li><strong>Manage Stress:</strong> Stress raises blood sugar</li></ul><br><strong>Diabetic Diet Guidelines:</strong><ul><li><strong>Choose:</strong> Whole grains, lean proteins, vegetables, fruits</li><li><strong>Limit:</strong> Refined sugars, white bread, sugary drinks</li><li><strong>Portion Control:</strong> Use plate method (½ vegetables, ¼ protein, ¼ starch)</li><li><strong>Healthy Snacks:</strong> Nuts, Greek yogurt, vegetables with hummus</li><li><strong>Timing:</strong> Eat regular meals, don\'t skip</li></ul><br><strong>🚨 DANGEROUS BLOOD SUGAR LEVELS:</strong><br><br><strong>Severe Low Blood Sugar (Under 54 mg/dL):</strong><ul><li><strong>Symptoms:</strong> Confusion, shakiness, sweating, fast heartbeat</li><li><strong>Treatment:</strong> 15g fast-acting carbs (4 glucose tablets, ½ cup juice)</li><li><strong>Emergency:</strong> If unconscious, call 911, give glucagon if available</li></ul><br><strong>Dangerously High Blood Sugar (Over 400 mg/dL):</strong><ul><li><strong>Symptoms:</strong> Extreme thirst, frequent urination, nausea, vomiting</li><li><strong>Risk:</strong> Diabetic ketoacidosis (DKA) - life-threatening</li><li><strong>Action:</strong> Call doctor immediately, may need emergency care</li></ul><br><strong>Common Diabetes Medications:</strong><ul><li><strong>Metformin:</strong> Reduces glucose production, first-line treatment</li><li><strong>Insulin:</strong> Various types (rapid, long-acting), essential for Type 1</li><li><strong>Sulfonylureas:</strong> Stimulate insulin production</li><li><strong>SGLT2 Inhibitors:</strong> Help kidneys remove glucose</li></ul>';
-      }
-
-      // GENERAL WELLNESS & LIFESTYLE QUERIES
-      if (queryLower.includes('diet') || queryLower.includes('exercise') || queryLower.includes('weight') ||
-          queryLower.includes('nutrition') || queryLower.includes('healthy eating') || queryLower.includes('wellness') ||
-          queryLower.includes('prevention') || queryLower.includes('lifestyle') || queryLower.includes('stress') ||
-          queryLower.includes('sleep') || queryLower.includes('smoking') || queryLower.includes('alcohol')) {
-        
-        return disclaimer + '<strong>COMPREHENSIVE WELLNESS & PREVENTION GUIDE</strong><br><br><strong>Heart-Healthy Diet Fundamentals:</strong><ul><li><strong>Mediterranean Diet:</strong> Olive oil, fish, fruits, vegetables, whole grains, nuts</li><li><strong>DASH Diet:</strong> Low sodium, high potassium, emphasizes fruits/vegetables</li><li><strong>Limit:</strong> Saturated fat under 7%, trans fat under 1%, sodium under 2.3g daily</li><li><strong>Portion Control:</strong> Use smaller plates, eat slowly, stop when satisfied</li></ul><br><strong>Exercise Recommendations:</strong><ul><li><strong>Cardio:</strong> 150 minutes moderate or 75 minutes vigorous weekly</li><li><strong>Strength Training:</strong> 2+ days per week, all major muscle groups</li><li><strong>Flexibility:</strong> Stretching or yoga 2-3 times weekly</li><li><strong>Start Slow:</strong> If inactive, begin with 10-minute walks</li></ul><br><strong>Stress Management:</strong><ul><li><strong>Deep Breathing:</strong> 4-7-8 technique (inhale 4, hold 7, exhale 8)</li><li><strong>Meditation:</strong> 10-20 minutes daily, apps like Headspace/Calm</li><li><strong>Physical Activity:</strong> Walking, yoga, tai chi reduce stress</li><li><strong>Social Support:</strong> Connect with family/friends regularly</li></ul><br><strong>Quality Sleep Tips:</strong><ul><li><strong>Schedule:</strong> Same bedtime/wake time daily, including weekends</li><li><strong>Environment:</strong> Dark, cool (65-68°F), quiet room</li><li><strong>Avoid:</strong> Caffeine 6+ hours before bed, screens 1 hour before</li><li><strong>Duration:</strong> 7-9 hours for adults</li></ul>';
-      }
-
-      // MEDICATION & DRUG INTERACTION QUERIES
-      if (queryLower.includes('medication') || queryLower.includes('drug interaction') || queryLower.includes('side effect') ||
-          queryLower.includes('pill') || queryLower.includes('prescription') || queryLower.includes('pharmacy') ||
-          queryLower.includes('dosage') || queryLower.includes('when to take') || queryLower.includes('drug safety')) {
-        
-        return disclaimer + '<strong>MEDICATION SAFETY & MANAGEMENT</strong><br><br><strong>Important Drug Safety Tips:</strong><ul><li><strong>Take as Prescribed:</strong> Same time daily, don\'t skip or double doses</li><li><strong>Don\'t Stop Abruptly:</strong> Especially blood pressure and heart medications</li><li><strong>Read Labels:</strong> Check expiration dates, storage requirements</li><li><strong>Keep List Updated:</strong> Include supplements, over-the-counter medications</li></ul><br><strong>Common Drug Interactions to Avoid:</strong><ul><li><strong>Blood Thinners + NSAIDs:</strong> Increased bleeding risk</li><li><strong>ACE Inhibitors + Potassium:</strong> Dangerous high potassium levels</li><li><strong>Statins + Grapefruit:</strong> Increases medication levels</li><li><strong>Multiple Blood Pressure Meds:</strong> Risk of dangerously low pressure</li></ul><br><strong>When to Call Your Doctor:</strong><ul><li>Severe side effects or allergic reactions</li><li>New symptoms after starting medication</li><li>Want to stop or change medications</li><li>Questions about interactions with new drugs</li></ul><br><strong>Medication Organization:</strong><ul><li>Use pill organizers for daily medications</li><li>Set phone alarms for medication times</li><li>Keep emergency medications easily accessible</li><li>Store medications properly (temperature, light)</li></ul>';
-      }
-
-      // EMERGENCY & SYMPTOM QUERIES
-      if (queryLower.includes('emergency') || queryLower.includes('when to call 911') || queryLower.includes('warning signs') ||
-          queryLower.includes('symptoms') || queryLower.includes('urgent') || queryLower.includes('serious') ||
-          queryLower.includes('dangerous') || queryLower.includes('call doctor')) {
-        
-        return disclaimer + '<strong>🚨 MEDICAL EMERGENCY RECOGNITION</strong><br><br><strong>CALL 911 IMMEDIATELY FOR:</strong><ul><li><strong>Chest Pain:</strong> Lasting over 5 minutes, especially with sweating/nausea</li><li><strong>Stroke Signs:</strong> Face drooping, arm weakness, speech difficulty</li><li><strong>Severe Breathing Problems:</strong> Unable to speak in full sentences</li><li><strong>Severe Allergic Reaction:</strong> Swelling, difficulty breathing, hives</li><li><strong>Blood Sugar Emergencies:</strong> Unconscious diabetic, severe confusion</li></ul><br><strong>Call Your Doctor Same Day For:</strong><ul><li>Blood pressure over 180/120 without symptoms</li><li>Blood sugar consistently over 300 mg/dL</li><li>New or worsening shortness of breath</li><li>Rapid weight gain (3+ pounds in 24 hours)</li><li>Severe medication side effects</li></ul><br><strong>Monitor and Schedule Appointment For:</strong><ul><li>Gradually worsening symptoms</li><li>Questions about medication effectiveness</li><li>Need for medication adjustments</li><li>Routine follow-up care</li></ul><br><strong>Keep These Numbers Handy:</strong><ul><li>911 for emergencies</li><li>Your doctor\'s office number</li><li>24-hour nurse hotline (if available)</li><li>Poison Control: 1-800-222-1222</li></ul>';
-      }
-
-      // HEALTH CALENDAR & TRACKING QUERIES
-      if (queryLower.includes('calendar') || queryLower.includes('tracking') || queryLower.includes('schedule') ||
-          queryLower.includes('health tracking') || queryLower.includes('health calendar')) {
-        
-        return disclaimer + '<strong>📅 HEALTH TRACKING & CALENDAR MANAGEMENT</strong><br><br><strong>Daily Health Tracking:</strong><ul><li><strong>Blood Pressure:</strong> Same time daily (morning preferred), log readings</li><li><strong>Blood Sugar:</strong> Before meals, 2 hours after, bedtime (if diabetic)</li><li><strong>Weight:</strong> Daily, same time, same clothes (heart failure patients)</li><li><strong>Medications:</strong> Check off when taken, note any missed doses</li><li><strong>Symptoms:</strong> Rate daily (1-10 scale), note triggers</li></ul><br><strong>Weekly Health Goals:</strong><ul><li><strong>Exercise:</strong> 150 minutes moderate activity per week</li><li><strong>Meal Prep:</strong> Plan heart-healthy meals for the week</li><li><strong>Medication Review:</strong> Organize pill containers weekly</li><li><strong>Weight Trend:</strong> Calculate weekly average</li></ul><br><strong>Monthly Health Checkups:</strong><ul><li><strong>Blood Pressure Log Review:</strong> Look for patterns and trends</li><li><strong>Medication Effectiveness:</strong> Note if adjustments needed</li><li><strong>Doctor Appointments:</strong> Schedule routine follow-ups</li><li><strong>Lab Work:</strong> Schedule blood tests as recommended</li></ul><br><strong>Health Tracking Apps & Tools:</strong><ul><li><strong>Blood Pressure:</strong> AHA Check. Change. Control, Heart Habit</li><li><strong>Diabetes:</strong> MySugr, Glucose Buddy, Diabetic Connect</li><li><strong>General Health:</strong> MyFitnessPal, Apple Health, Google Fit</li><li><strong>Medication:</strong> Medisafe, MyTherapy, Round Health</li></ul>';
-      }
-
-      // PERSONAL HEALTH INFO MANAGEMENT
-      if (queryLower.includes('personal health') || queryLower.includes('health information') || queryLower.includes('my info') ||
-          queryLower.includes('health records') || queryLower.includes('medical history')) {
-        
-        return disclaimer + '<strong>📋 PERSONAL HEALTH INFORMATION MANAGEMENT</strong><br><br><strong>Essential Health Information to Track:</strong><ul><li><strong>Current Medications:</strong> Names, dosages, times taken, prescribing doctor</li><li><strong>Medical Conditions:</strong> Diagnoses, dates diagnosed, current status</li><li><strong>Allergies:</strong> Drug allergies, food allergies, reaction descriptions</li><li><strong>Emergency Contacts:</strong> Doctor numbers, family contacts, pharmacy</li><li><strong>Insurance Info:</strong> Card photos, member ID, group numbers</li></ul><br><strong>Key Health Numbers to Know:</strong><ul><li><strong>Blood Pressure Target:</strong> Your specific goal (usually under 130/80)</li><li><strong>Cholesterol Levels:</strong> Last LDL, HDL, triglyceride results</li><li><strong>HbA1c (if diabetic):</strong> Last 3-6 month average blood sugar</li><li><strong>Weight Goal:</strong> Target BMI or weight range</li><li><strong>Heart Rate Range:</strong> Resting and target exercise rates</li></ul><br><strong>Medical History Essentials:</strong><ul><li><strong>Family History:</strong> Parents/siblings with heart disease, diabetes, high BP</li><li><strong>Previous Procedures:</strong> Surgeries, cardiac procedures, hospitalizations</li><li><strong>Previous Medications:</strong> What worked, what caused side effects</li><li><strong>Baseline Tests:</strong> EKG, echocardiogram, stress test results</li></ul><br><strong>Health Information Security:</strong><ul><li><strong>Digital Copies:</strong> Photos of insurance cards, medication lists</li><li><strong>Secure Storage:</strong> Password-protected files or health apps</li><li><strong>Share Appropriately:</strong> Give copies to family members, caregivers</li><li><strong>Keep Updated:</strong> Review and update quarterly</li></ul>';
-      }
-
-      // MEDICAL APPOINTMENTS MANAGEMENT
-      if (queryLower.includes('appointments') || queryLower.includes('doctor visit') || queryLower.includes('medical appointment') ||
-          queryLower.includes('follow-up') || queryLower.includes('checkup')) {
-        
-        return disclaimer + '<strong>🏥 MEDICAL APPOINTMENTS & FOLLOW-UP CARE</strong><br><br><strong>Routine Appointment Schedule:</strong><ul><li><strong>Primary Care:</strong> Every 6-12 months for chronic conditions</li><li><strong>Cardiologist:</strong> Every 3-6 months for heart disease patients</li><li><strong>Endocrinologist:</strong> Every 3-6 months for diabetes</li><li><strong>Eye Doctor:</strong> Annually for diabetics, every 2 years otherwise</li><li><strong>Dentist:</strong> Every 6 months (important for heart health)</li></ul><br><strong>Preparing for Doctor Visits:</strong><ul><li><strong>Medication List:</strong> Bring current list with dosages</li><li><strong>Symptom Log:</strong> Notes on any new or changing symptoms</li><li><strong>Question List:</strong> Write down questions beforehand</li><li><strong>Health Logs:</strong> Blood pressure, blood sugar, weight trends</li><li><strong>Insurance Card:</strong> Bring current card and ID</li></ul><br><strong>Important Lab Tests & Frequency:</strong><ul><li><strong>Blood Pressure Patients:</strong> Basic metabolic panel every 6-12 months</li><li><strong>Cholesterol:</strong> Lipid panel every 3-6 months until stable</li><li><strong>Diabetes:</strong> HbA1c every 3-6 months, annual kidney function</li><li><strong>Heart Disease:</strong> Various tests based on condition</li></ul><br><strong>After Your Appointment:</strong><ul><li><strong>Get Summary:</strong> Ask for written summary of visit</li><li><strong>Understand Instructions:</strong> Clarify any medication changes</li><li><strong>Schedule Follow-up:</strong> Book next appointment before leaving</li><li><strong>Fill Prescriptions:</strong> Get new medications promptly</li><li><strong>Follow Instructions:</strong> Implement any lifestyle changes discussed</li></ul>';
-      }
-
-      // MEDICATION MANAGEMENT
-      if (queryLower.includes('medication management') || queryLower.includes('manage medications') || 
-          queryLower.includes('pill organization') || queryLower.includes('medication safety') ||
-          (queryLower.includes('medications') && !queryLower.includes('heart') && !queryLower.includes('diabetes'))) {
-        
-        return disclaimer + '<strong>💊 COMPREHENSIVE MEDICATION MANAGEMENT</strong><br><br><strong>Medication Organization System:</strong><ul><li><strong>Pill Organizers:</strong> Weekly organizers with AM/PM compartments</li><li><strong>Medication List:</strong> Keep updated list in wallet and on phone</li><li><strong>Set Reminders:</strong> Phone alarms for each medication time</li><li><strong>Refill Calendar:</strong> Mark refill dates on calendar</li><li><strong>Emergency Supply:</strong> Keep 7-day supply for emergencies</li></ul><br><strong>Safe Medication Practices:</strong><ul><li><strong>Take as Prescribed:</strong> Same time daily, don\'t skip or double doses</li><li><strong>Don\'t Stop Suddenly:</strong> Especially blood pressure and heart medications</li><li><strong>Read Labels Carefully:</strong> Check expiration dates and instructions</li><li><strong>Store Properly:</strong> Cool, dry place unless refrigeration needed</li><li><strong>Keep Original Bottles:</strong> For emergency identification</li></ul><br><strong>Critical Drug Interactions to Avoid:</strong><ul><li><strong>Blood Thinners + NSAIDs:</strong> Increases bleeding risk</li><li><strong>ACE Inhibitors + Potassium:</strong> Can cause dangerous high potassium</li><li><strong>Statins + Grapefruit:</strong> Increases medication levels</li><li><strong>Diabetes Meds + Alcohol:</strong> Risk of dangerous low blood sugar</li><li><strong>Multiple BP Meds:</strong> Can cause dangerously low blood pressure</li></ul><br><strong>When to Contact Your Doctor:</strong><ul><li><strong>Side Effects:</strong> New symptoms after starting medication</li><li><strong>Missed Doses:</strong> Unsure what to do if you miss doses</li><li><strong>Cost Issues:</strong> Can\'t afford medications</li><li><strong>Effectiveness:</strong> Medication doesn\'t seem to be working</li><li><strong>New Medications:</strong> Before starting any new drugs or supplements</li></ul><br><strong>Medication Cost-Saving Tips:</strong><ul><li><strong>Generic Options:</strong> Ask about generic versions</li><li><strong>Manufacturer Coupons:</strong> Check drug company websites</li><li><strong>Pharmacy Programs:</strong> Walmart $4 list, Costco, etc.</li><li><strong>Insurance Formulary:</strong> Choose preferred drugs when possible</li><li><strong>90-Day Supplies:</strong> Often cheaper than monthly refills</li></ul>';
-      }
-
-      // DEFAULT RESPONSE WITH SUGGESTIONS
-      return disclaimer + 'I specialize in <strong>Hypertension, Cholesterol, Heart Disease, Diabetes, and Health Management</strong>.<br><br><strong>Popular Questions I Can Help With:</strong><ul><li>"My blood pressure is 150/95, what should I do?"</li><li>"How can I lower my cholesterol naturally?"</li><li>"What are the warning signs of a heart attack?"</li><li>"How do I control my blood sugar better?"</li><li>"How should I organize my medications?"</li><li>"What should I track in my health calendar?"</li><li>"How do I prepare for doctor appointments?"</li><li>"What health information should I keep?"</li><li>"When should I call 911 for chest pain?"</li><li>"Can I exercise with heart disease?"</li></ul><br><strong>Try asking about:</strong> Symptoms, medications, diet, exercise, emergency signs, natural treatments, health tracking, or appointment management.<br><br>Click the topic cards above for detailed information!';
-    }
-
-    // Send message with chat clearing (for card clicks)
-    function sendMessageWithClear(preset) {
-      clearChat(); // Clear previous conversation
-      sendMessage(preset);
-    }
-
-    // Regular send message function (for typed messages)
-    function sendMessage(preset) {
-      const text = preset || userInput.value.trim();
+    // ---------- Chat flow ----------
+    async function sendMessage(preset) {
+      const specialty = document.querySelector('meta[name="app-specialty"]')?.content || 'General';
+      const text = typeof preset === 'string' ? preset : (userInput.value || '').toString().trim();
       if (!text) return;
 
-      // Add user message instantly
-      addBubble(text, 'user', false);
+      resetChat();                  // new thread clears previous chat
+      const mySession = ++sessionCounter;
       userInput.value = '';
+      addBubble('user', esc(text));
 
-      // Add bot response with typewriter effect after delay
-      setTimeout(() => {
-        const response = getMedicalResponse(text);
-        addBubble(response, 'bot', true); // Enable typewriter effect
-      }, 800);
-    }
+      setAIStatus(lang==='es' ? '⏳ Contactando a la IA…' : '⏳ Contacting AI…');
+      const thinking = addBubble('bot', '<em>…</em>');
+      const msgEl = thinking.querySelector('.message');
 
-    // Enter key support
-    userInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendMessage();
-    });
-
-    console.log('InfoHealth AI app initialized with enhanced natural language processing');
-
-    // Health Management System - In-Memory Storage
-    let healthData = {
-      readings: [],
-      goals: [],
-      personalInfo: {},
-      conditions: [],
-      allergies: [],
-      appointments: [],
-      medications: []
-    };
-
-    // Modal Management Functions
-    function showHealthCalendar() {
-      document.getElementById('calendarModal').style.display = 'block';
-      loadHealthReadings();
-      loadHealthGoals();
-      document.getElementById('readingTime').value = new Date().toISOString().slice(0, 16);
-    }
-
-    function showMyHealthInfo() {
-      document.getElementById('healthInfoModal').style.display = 'block';
-      loadPersonalInfo();
-      loadMedicalConditions();
-      loadAllergies();
-    }
-
-    function showAppointments() {
-      document.getElementById('appointmentsModal').style.display = 'block';
-      loadAppointments();
-    }
-
-    function showMedications() {
-      document.getElementById('medicationsModal').style.display = 'block';
-      loadMedications();
-    }
-
-    function closeModal(modalId) {
-      document.getElementById(modalId).style.display = 'none';
-    }
-
-    // Close modal when clicking outside
-    window.onclick = function(event) {
-      if (event.target.classList.contains('modal')) {
-        event.target.style.display = 'none';
+      try {
+        const { text: reply, provider, latencyMs } = await callChat(text, specialty);
+        if (mySession !== sessionCounter) return; // canceled by newer prompt
+        typeWriter(msgEl, mdToHtml(reply || ''), 14, () => {
+          setAIStatus(`✅ ${lang==='es'?'IA':'AI'} (${provider || 'provider'} • ${latencyMs||'—'}ms)`);
+          addDisclaimerBelow(msgEl);
+          addHomeActionBubble();
+        });
+      } catch (err) {
+        if (mySession !== sessionCounter) return;
+        const fbText = getMedicalResponse(text);
+        typeWriter(msgEl, mdToHtml(fbText), 14, () => {
+          setAIStatus(lang==='es' ? '📚 Contenido de referencia' : '📚 Knowledge-Based Responses');
+          addDisclaimerBelow(msgEl);
+          addHomeActionBubble();
+        });
       }
     }
+    userInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
 
-    // Health Calendar Functions
-    function addHealthReading() {
-      const value = document.getElementById('readingValue').value;
-      const type = document.getElementById('readingType').value;
-      const time = document.getElementById('readingTime').value;
-      
-      if (value && time) {
-        const reading = {
-          id: Date.now(),
-          value: value,
-          type: type,
-          time: time,
-          date: new Date(time).toLocaleDateString()
-        };
-        
-        healthData.readings.push(reading);
-        loadHealthReadings();
-        
-        // Clear form
-        document.getElementById('readingValue').value = '';
-        document.getElementById('readingTime').value = new Date().toISOString().slice(0, 16);
-      }
+    // ---------- My Info ----------
+    let medEditIndex = -1, apptEditIndex = -1;
+    function showMyInfo(){ resetChat();
+      const info = store.get('myInfo', {name:'', dob:'', sex:'', phone:'', email:'', doctor:'', language:'English', allergies:'', conditions:''});
+      addBubble('bot', sectionWrap(`
+        <h3>👤 ${lang==='es'?'Mi información':'My Info'}</h3>
+        <div class="form-group"><label>${lang==='es'?'Nombre completo':'Full Name'}</label><input id="mi_name" value="${esc(info.name)}"></div>
+        <div class="form-group"><label>${lang==='es'?'Fecha de nacimiento':'Date of Birth'}</label><input id="mi_dob" type="date" value="${esc(info.dob)}"></div>
+        <div class="form-group"><label>${lang==='es'?'Sexo':'Sex'}</label>
+          <select id="mi_sex">
+            <option ${info.sex==='Male'?'selected':''}>Male</option>
+            <option ${info.sex==='Female'?'selected':''}>Female</option>
+            <option ${info.sex==='Other'?'selected':''}>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Phone</label><input id="mi_phone" value="${esc(info.phone)}"></div>
+        <div class="form-group"><label>Email</label><input id="mi_email" value="${esc(info.email)}"></div>
+        <div class="form-group"><label>${lang==='es'?'Médico principal':'Primary Doctor'}</label><input id="mi_doctor" value="${esc(info.doctor)}"></div>
+        <div class="form-group"><label>${lang==='es'?'Idioma preferido':'Preferred Language'}</label><input id="mi_lang" value="${esc(info.language||'English')}"></div>
+        <div class="form-group"><label>${lang==='es'?'Alergias':'Allergies'}</label><textarea id="mi_allergies">${esc(info.allergies)}</textarea></div>
+        <div class="form-group"><label>${lang==='es'?'Condiciones':'Conditions'}</label><textarea id="mi_conditions">${esc(info.conditions)}</textarea></div>
+        <button class="btn" onclick="saveMyInfo()">💾 ${lang==='es'?'Guardar':'Save'}</button>
+      `));
     }
-
-    function loadHealthReadings() {
-      const container = document.getElementById('healthReadings');
-      container.innerHTML = '';
-      
-      healthData.readings.slice(-10).reverse().forEach(reading => {
-        const div = document.createElement('div');
-        div.className = 'reading-entry';
-        div.innerHTML = `
-          <strong>${reading.type}</strong>
-          <span>${reading.value}</span>
-          <span>${reading.date}</span>
-          <button class="delete-btn" onclick="deleteReading(${reading.id})">Delete</button>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function deleteReading(id) {
-      healthData.readings = healthData.readings.filter(r => r.id !== id);
-      loadHealthReadings();
-    }
-
-    function addHealthGoal() {
-      const goalText = document.getElementById('newGoal').value;
-      if (goalText) {
-        const goal = {
-          id: Date.now(),
-          text: goalText,
-          completed: false,
-          date: new Date().toLocaleDateString()
-        };
-        
-        healthData.goals.push(goal);
-        loadHealthGoals();
-        document.getElementById('newGoal').value = '';
-      }
-    }
-
-    function loadHealthGoals() {
-      const container = document.getElementById('healthGoals');
-      container.innerHTML = '';
-      
-      healthData.goals.forEach(goal => {
-        const div = document.createElement('div');
-        div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px; background: white; border-radius: 6px; margin-bottom: 8px;';
-        div.innerHTML = `
-          <span style="${goal.completed ? 'text-decoration: line-through; color: #666;' : ''}">${goal.text}</span>
-          <div>
-            <button class="btn" style="padding: 5px 10px; margin-right: 5px;" onclick="toggleGoal(${goal.id})">${goal.completed ? 'Undo' : 'Complete'}</button>
-            <button class="delete-btn" onclick="deleteGoal(${goal.id})">Delete</button>
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function toggleGoal(id) {
-      const goal = healthData.goals.find(g => g.id === id);
-      if (goal) {
-        goal.completed = !goal.completed;
-        loadHealthGoals();
-      }
-    }
-
-    function deleteGoal(id) {
-      healthData.goals = healthData.goals.filter(g => g.id !== id);
-      loadHealthGoals();
-    }
-
-    // Personal Health Info Functions
-    function saveHealthInfo() {
-      healthData.personalInfo = {
-        fullName: document.getElementById('fullName').value,
-        dateOfBirth: document.getElementById('dateOfBirth').value,
-        emergencyContact: document.getElementById('emergencyContact').value,
-        bpGoal: document.getElementById('bpGoal').value,
-        cholesterolGoal: document.getElementById('cholesterolGoal').value,
-        bsGoal: document.getElementById('bsGoal').value,
-        weightGoal: document.getElementById('weightGoal').value
+    function saveMyInfo(){
+      const info = {
+        name: ($('#mi_name')?.value ?? '').toString(),
+        dob: $('#mi_dob')?.value || '',
+        sex: $('#mi_sex')?.value || '',
+        phone: ($('#mi_phone')?.value ?? '').toString(),
+        email: ($('#mi_email')?.value ?? '').toString(),
+        doctor: ($('#mi_doctor')?.value ?? '').toString(),
+        language: ($('#mi_lang')?.value ?? '').toString(),
+        allergies: ($('#mi_allergies')?.value ?? '').toString(),
+        conditions: ($('#mi_conditions')?.value ?? '').toString(),
       };
-      alert('Health information saved successfully!');
+      store.set('myInfo', info);
+      addBubble('bot', sectionWrap(`<strong>${lang==='es'?'Guardado.':'Saved.'}</strong> ${lang==='es'?'Perfil actualizado.':'Your profile has been updated.'}`));
     }
 
-    function loadPersonalInfo() {
-      const info = healthData.personalInfo;
-      document.getElementById('fullName').value = info.fullName || '';
-      document.getElementById('dateOfBirth').value = info.dateOfBirth || '';
-      document.getElementById('emergencyContact').value = info.emergencyContact || '';
-      document.getElementById('bpGoal').value = info.bpGoal || '';
-      document.getElementById('cholesterolGoal').value = info.cholesterolGoal || '';
-      document.getElementById('bsGoal').value = info.bsGoal || '';
-      document.getElementById('weightGoal').value = info.weightGoal || '';
+    // ---------- Medications ----------
+    function showMedications(){ resetChat();
+      const meds = store.get('meds', []);
+      addBubble('bot', sectionWrap(`
+        <h3>💊 ${lang==='es'?'Medicamentos':'Medications'}</h3>
+        <div class="form-group"><label>${lang==='es'?'Nombre':'Name'}</label><input id="med_name"></div>
+        <div class="form-group"><label>${lang==='es'?'Dosis':'Dose'}</label><input id="med_dose" placeholder="e.g., 10 mg"></div>
+        <div class="form-group"><label>${lang==='es'?'Frecuencia':'Frequency'}</label><input id="med_freq" placeholder="e.g., once daily"></div>
+        <div class="form-group"><label>${lang==='es'?'Fecha de inicio':'Start Date'}</label><input id="med_start" type="date"></div>
+        <div class="form-group"><label>${lang==='es'?'Notas':'Notes'}</label><input id="med_notes" placeholder="optional"></div>
+        <button class="btn" onclick="addOrUpdateMedication()">
+          ${medEditIndex>=0?(lang==='es'?'Actualizar':'Update'):(lang==='es'?'Añadir':'Add')} ${lang==='es'?'medicamento':'Medication'}
+        </button>
+        <button class="btn" onclick="exportMedsCSV()">⬇️ ${lang==='es'?'Exportar CSV':'Export CSV'}</button>
+        <div style="margin-top:1rem;"><strong>${lang==='es'?'Lista actual':'Current List'}</strong></div>
+        <div id="med_list">${renderMedList(meds)}</div>
+      `));
+    }
+    function renderMedList(meds){
+      if (!meds.length) return `<p>${lang==='es'?'Sin medicamentos guardados.':'No medications saved.'}</p>`;
+      return meds.map((m,i)=>`
+        <div class="info-item medication-item" style="display:flex;justify-content:space-between;gap:.5rem;align-items:center;padding:.5rem;border-left:3px solid #e0e0e0;background:#fff;margin:.4rem 0;border-radius:6px;">
+          <div>
+            <strong>${esc(m.name)}</strong> — ${esc(m.dose||'')} ${esc(m.freq||'')}
+            ${m.start?`<div style="font-size:.75rem;color:#555;">${lang==='es'?'Desde:':'Since:'} ${esc(m.start)}</div>`:''}
+            ${m.notes?`<div style="font-size:.75rem;color:#555;">${esc(m.notes)}</div>`:''}
+          </div>
+          <div>
+            <button class="btn" onclick="editMedication(${i})">${lang==='es'?'Editar':'Edit'}</button>
+            <button class="btn" style="background:#dc3545" onclick="deleteMedication(${i})">${lang==='es'?'Eliminar':'Delete'}</button>
+          </div>
+        </div>`).join('');
+    }
+    function clearMedForm(){ medEditIndex=-1; ['med_name','med_dose','med_freq','med_start','med_notes'].forEach(id=>{ const el=$('#'+id); if(el) el.value=''; }); }
+    function addOrUpdateMedication(){
+      const name = ($('#med_name')?.value ?? '').toString().trim();
+      if(!name) return;
+      const meds = store.get('meds',[]);
+      const m = {
+        id: meds[medEditIndex]?.id || store.uid(),
+        name,
+        dose: ($('#med_dose')?.value ?? '').toString().trim(),
+        freq: ($('#med_freq')?.value ?? '').toString().trim(),
+        start: $('#med_start')?.value || '',
+        notes: ($('#med_notes')?.value ?? '').toString().trim()
+      };
+      if(medEditIndex>=0) meds[medEditIndex]=m; else meds.push(m);
+      store.set('meds',meds); medEditIndex=-1; $('#med_list').innerHTML=renderMedList(meds); clearMedForm();
+    }
+    function editMedication(i){ medEditIndex=i; const m=store.get('meds',[])[i]; if(!m) return;
+      $('#med_name').value=m.name||''; $('#med_dose').value=m.dose||''; $('#med_freq').value=m.freq||''; $('#med_start').value=m.start||''; $('#med_notes').value=m.notes||''; }
+    function deleteMedication(i){ const meds=store.get('meds',[]); meds.splice(i,1); store.set('meds',meds); $('#med_list').innerHTML=renderMedList(meds); }
+
+    // ---------- Appointments ----------
+    function showAppointments(){ resetChat();
+      const appts=store.get('appts',[]);
+      addBubble('bot', sectionWrap(`
+        <h3>📅 ${lang==='es'?'Citas':'Appointments'}</h3>
+        <div class="form-group"><label>${lang==='es'?'Fecha':'Date'}</label><input id="ap_date" type="date"></div>
+        <div class="form-group"><label>${lang==='es'?'Hora':'Time'}</label><input id="ap_time" type="time"></div>
+        <div class="form-group"><label>${lang==='es'?'Profesional':'Provider'}</label><input id="ap_provider"></div>
+        <div class="form-group"><label>${lang==='es'?'Lugar':'Location'}</label><input id="ap_location"></div>
+        <div class="form-group"><label>${lang==='es'?'Motivo / Notas':'Reason / Notes'}</label><input id="ap_notes"></div>
+        <button class="btn" onclick="addOrUpdateAppt()">
+          ${apptEditIndex>=0?(lang==='es'?'Actualizar':'Update'):(lang==='es'?'Añadir':'Add')} ${lang==='es'?'cita':'Appointment'}
+        </button>
+        <button class="btn" onclick="exportApptsCSV()">⬇️ ${lang==='es'?'Exportar CSV':'Export CSV'}</button>
+        <div style="margin-top:1rem;"><strong>${lang==='es'?'Próximas':'Upcoming'}</strong></div>
+        <div id="ap_list">${renderApptList(appts)}</div>
+      `));
+    }
+    function renderApptList(appts){
+      if(!appts.length) return `<p>${lang==='es'?'Sin citas guardadas.':'No appointments saved.'}</p>`;
+      const sorted=appts.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+      return sorted.map(a=>`
+        <div class="info-item" style="display:flex;justify-content:space-between;gap:.5rem;align-items:center;padding:.5rem;border-left:3px solid #e0e0e0;background:#fff;margin:.4rem 0;border-radius:6px;">
+          <div>
+            <strong>${esc(a.date)} ${esc(a.time||'')}</strong> — ${esc(a.provider||'')}
+            ${a.location?`<div style="font-size:.75rem;color:#555;">${esc(a.location)}</div>`:''}
+            ${a.notes?`<div style="font-size:.75rem;color:#555;">${esc(a.notes)}</div>`:''}
+          </div>
+          <div>
+            <button class="btn" onclick="editAppt('${a.id}')">${lang==='es'?'Editar':'Edit'}</button>
+            <button class="btn" style="background:#dc3545" onclick="deleteAppt('${a.id}')">${lang==='es'?'Eliminar':'Delete'}</button>
+          </div>
+        </div>`).join('');
+    }
+    function clearApptForm(){ apptEditIndex=-1; ['ap_date','ap_time','ap_provider','ap_location','ap_notes'].forEach(id=>{ const el=$('#'+id); if(el) el.value=''; }); }
+    function addOrUpdateAppt(){
+      const date=$('#ap_date')?.value; if(!date) return;
+      const appts=store.get('appts',[]);
+      const item={
+        id: appts[apptEditIndex]?.id || store.uid(),
+        date,
+        time: $('#ap_time')?.value || '',
+        provider: ($('#ap_provider')?.value ?? '').toString().trim(),
+        location: ($('#ap_location')?.value ?? '').toString().trim(),
+        notes: ($('#ap_notes')?.value ?? '').toString().trim()
+      };
+      if(apptEditIndex>=0) appts[apptEditIndex]=item; else appts.push(item);
+      store.set('appts',appts); $('#ap_list').innerHTML=renderApptList(appts); clearApptForm();
+    }
+    function editAppt(id){ const appts=store.get('appts',[]); const idx=appts.findIndex(a=>a.id===id); if(idx<0) return; apptEditIndex=idx; const a=appts[idx];
+      $('#ap_date').value=a.date||''; $('#ap_time').value=a.time||''; $('#ap_provider').value=a.provider||''; $('#ap_location').value=a.location||''; $('#ap_notes').value=a.notes||''; }
+    function deleteAppt(id){ const appts=store.get('appts',[]).filter(a=>a.id!==id); store.set('appts',appts); $('#ap_list').innerHTML=renderApptList(appts); }
+
+    // ---------- Calendar ----------
+    const currentCal={ year:new Date().getFullYear(), month:new Date().getMonth() };
+    function showCalendar(year=currentCal.year, month=currentCal.month){
+      resetChat(); currentCal.year=year; currentCal.month=month;
+      const now=new Date(), first=new Date(year,month,1), days=new Date(year,month+1,0).getDate(), start=first.getDay();
+      const monthName=first.toLocaleString([], { month:'long' });
+      let grid='<div class="calendar-grid">';
+      grid+=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="calendar-day-header">${d}</div>`).join('');
+      for(let i=0;i<start;i++) grid+=`<div class="calendar-day other-month"></div>`;
+      const appts=store.get('appts',[]), rems=store.get('reminders',[]);
+      const hasItem=d=>{ const ds=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; return appts.some(a=>a.date===ds)||rems.some(r=>r.date===ds); };
+      for(let d=1; d<=days; d++){ const isToday=(d===now.getDate()&&month===now.getMonth()&&year===now.getFullYear());
+        const cls=['calendar-day']; if(isToday) cls.push('today'); if(hasItem(d)) cls.push('has-appointment');
+        grid+=`<div class="${cls.join(' ')}" onclick="openDay(${year},${month},${d})">${d}</div>`; }
+      grid+='</div>';
+      addBubble('bot', sectionWrap(`
+        <div class="calendar-header">
+          <button class="calendar-nav" onclick="showCalendar(${month===0?year-1:year}, ${month===0?11:month-1})">‹</button>
+          <div class="calendar-month-year">${monthName} ${year}</div>
+          <button class="calendar-nav" onclick="showCalendar(${month===11?year+1:year}, ${month===11?0:month+1})">›</button>
+        </div>
+        ${grid}
+        <div id="dayDetails" style="margin-top:.8rem;"></div>`));
+    }
+    function openDay(year,month,day){
+      const ds=`${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      const appts=store.get('appts',[]).filter(a=>a.date===ds).sort((a,b)=>(a.time||'').localeCompare(b.time||'')); const target=$('#dayDetails'); if(!target) return;
+      target.innerHTML = `<strong>📋 ${ds}</strong>${appts.length? appts.map(a=>`
+        <div class="info-item" style="display:flex;justify-content:space-between;gap:.5rem;align-items:center;padding:.5rem;border-left:3px solid #e0e0e0;background:#fff;margin:.4rem 0;border-radius:6px;">
+          <div><strong>${esc(a.time||'—')}</strong> — ${esc(a.provider||'')} ${a.location?`<div style="font-size:.75rem;color:#555;">${esc(a.location)}</div>`:''}</div>
+          <div><button class="btn" onclick="editAppt('${a.id}'); showAppointments();">${lang==='es'?'Editar':'Edit'}</button>
+               <button class="btn" style="background:#dc3545" onclick="deleteAppt('${a.id}'); showCalendar(${year},${month});">${lang==='es'?'Eliminar':'Delete'}</button></div>
+        </div>`).join('') : '<p>No items.</p>'}`;
     }
 
-    function addMedicalCondition() {
-      const condition = document.getElementById('newCondition').value;
-      if (condition) {
-        healthData.conditions.push({
-          id: Date.now(),
-          name: condition,
-          date: new Date().toLocaleDateString()
-        });
-        loadMedicalConditions();
-        document.getElementById('newCondition').value = '';
+    // ---------- Drug Checker ----------
+    function showDrugChecker(){ resetChat();
+      const meds=store.get('meds',[]), currentMedsStr=meds.map(m=>m.name).join(', ');
+      addBubble('bot', sectionWrap(`
+        <h3>🧪 ${lang==='es'?'Comprobador de interacciones':'Drug Checker'}</h3>
+        <div class="form-group"><label>${lang==='es'?'Nuevo medicamento':'Enter a new medication to check:'}</label><input id="newDrug" type="text" placeholder="e.g., amlodipine"/></div>
+        <div class="form-group"><label>${lang==='es'?'Sus medicamentos actuales':'Your current meds (comma-separated):'}</label><input id="currentMeds" type="text" value="${esc(currentMedsStr)}" placeholder="e.g., metformin, losartan"/></div>
+        <button class="btn" onclick="runDrugCheck()">${lang==='es'?'Comprobar':'Check Interactions'}</button>
+        <div id="drugResults" style="margin-top:1rem;"></div>`));
+    }
+    function runDrugCheck(){
+      const newDrug=(($('#newDrug')?.value)||'').toString().trim().toLowerCase();
+      const current=(($('#currentMeds')?.value)||'').toString().toLowerCase();
+      const res=$('#drugResults'); if(!newDrug||!res) return;
+      const lists=Object.values(EXTRA).flat(); const found = lists.some(k=>newDrug.includes(k.toLowerCase())) || lists.some(k=>current.includes(k.toLowerCase()));
+      if(!found){
+        res.innerHTML=`<div class="info-section">
+          <h4>✅ ${lang==='es'?'Sin interacciones conocidas':'No Known Interactions Found'}</h4>
+          <p>${lang==='es'?'No se detectaron interacciones importantes':'No major interactions detected'} ${lang==='es'?'entre':'between'} ${newDrug.toUpperCase()} ${lang==='es'?'y sus medicamentos actuales.':'and your current medications.'}</p>
+          <p style="font-size:.8rem;color:#666;margin-top:.5rem;">${lang==='es'?'Siempre consulte a su médico antes de empezar un medicamento nuevo.':'Always consult your healthcare provider before starting new medications.'}</p>
+        </div>`;
+      } else {
+        res.innerHTML=`<div class="info-section" style="border-left-color:#dc3545;">
+          <h4 style="color:#dc3545;">⚠️ ${lang==='es'?'Posibles interacciones':'Potential Interactions Found'}</h4>
+          <p style="font-size:.8rem;color:#dc3545;margin-top:.5rem;font-weight:700;">
+          ${lang==='es'?'IMPORTANTE: consulte a su médico antes de tomar':'IMPORTANT: Contact your healthcare provider before taking'} ${newDrug.toUpperCase()}
+          </p></div>`;
       }
     }
 
-    function loadMedicalConditions() {
-      const container = document.getElementById('medicalConditions');
-      container.innerHTML = '';
-      
-      healthData.conditions.forEach(condition => {
-        const div = document.createElement('div');
-        div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px; background: white; border-radius: 6px; margin-bottom: 8px;';
-        div.innerHTML = `
-          <span><strong>${condition.name}</strong> <small>(Added: ${condition.date})</small></span>
-          <button class="delete-btn" onclick="deleteCondition(${condition.id})">Delete</button>
-        `;
-        container.appendChild(div);
-      });
+    // ---------- Health Tracker ----------
+    function showHealthTracker(){ resetChat();
+      const tracker=store.get('tracker',{bp:[],glucose:[],weight:[]});
+      addBubble('bot', sectionWrap(`
+        <h3>📈 ${lang==='es'?'Registro de salud':'Health Tracker'}</h3>
+        <div class="form-group"><label>${lang==='es'?'Métrica':'Metric'}</label>
+          <select id="ht_metric" onchange="renderTrackerInputs()">
+            <option value="bp">${lang==='es'?'Presión arterial':'Blood Pressure'}</option>
+            <option value="glucose">${lang==='es'?'Glucosa':'Glucose'}</option>
+            <option value="weight">${lang==='es'?'Peso':'Weight'}</option>
+          </select></div>
+        <div id="ht_inputs">${renderTrackerInputs(true)}</div>
+        <button class="btn" onclick="addTrackerEntry()">${lang==='es'?'Añadir registro':'Add Entry'}</button>
+        <button class="btn" onclick="exportTrackerCSV()">⬇️ ${lang==='es'?'Exportar CSV':'Export CSV'}</button>
+        <div style="margin-top:1rem;"><strong>${lang==='es'?'Últimos registros':'Recent Entries'}</strong></div>
+        <div id="ht_list">${renderTrackerList(tracker)}</div>`));
     }
-
-    function deleteCondition(id) {
-      healthData.conditions = healthData.conditions.filter(c => c.id !== id);
-      loadMedicalConditions();
-    }
-
-    function addAllergy() {
-      const allergy = document.getElementById('newAllergy').value;
-      if (allergy) {
-        healthData.allergies.push({
-          id: Date.now(),
-          name: allergy,
-          date: new Date().toLocaleDateString()
-        });
-        loadAllergies();
-        document.getElementById('newAllergy').value = '';
-      }
-    }
-
-    function loadAllergies() {
-      const container = document.getElementById('allergiesList');
-      container.innerHTML = '';
-      
-      healthData.allergies.forEach(allergy => {
-        const div = document.createElement('div');
-        div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px; background: white; border-radius: 6px; margin-bottom: 8px;';
-        div.innerHTML = `
-          <span><strong>${allergy.name}</strong> <small>(Added: ${allergy.date})</small></span>
-          <button class="delete-btn" onclick="deleteAllergy(${allergy.id})">Delete</button>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function deleteAllergy(id) {
-      healthData.allergies = healthData.allergies.filter(a => a.id !== id);
-      loadAllergies();
-    }
-
-    // Appointments Functions
-    function addAppointment() {
-      const doctor = document.getElementById('doctorName').value;
-      const time = document.getElementById('appointmentTime').value;
-      const type = document.getElementById('appointmentType').value;
-      const phone = document.getElementById('doctorPhone').value;
-      const notes = document.getElementById('appointmentNotes').value;
-      
-      if (doctor && time) {
-        const appointment = {
-          id: Date.now(),
-          doctor: doctor,
-          time: time,
-          type: type,
-          phone: phone,
-          notes: notes,
-          date: new Date(time).toLocaleDateString(),
-          isPast: new Date(time) < new Date()
-        };
-        
-        healthData.appointments.push(appointment);
-        loadAppointments();
-        
-        // Clear form
-        document.getElementById('doctorName').value = '';
-        document.getElementById('appointmentTime').value = '';
-        document.getElementById('doctorPhone').value = '';
-        document.getElementById('appointmentNotes').value = '';
-      }
-    }
-
-    function loadAppointments() {
-      const upcomingContainer = document.getElementById('upcomingAppointments');
-      const pastContainer = document.getElementById('pastAppointments');
-      
-      upcomingContainer.innerHTML = '';
-      pastContainer.innerHTML = '';
-      
-      const now = new Date();
-      
-      healthData.appointments.forEach(appointment => {
-        const appointmentDate = new Date(appointment.time);
-        const isUpcoming = appointmentDate >= now;
-        
-        const div = document.createElement('div');
-        div.className = 'health-card';
-        div.style.cssText = 'background: white; margin-bottom: 10px;';
-        div.innerHTML = `
-          <h4 style="margin: 0 0 10px 0; color: ${isUpcoming ? '#DAA520' : '#666'};">${appointment.doctor}</h4>
-          <p><strong>Date:</strong> ${new Date(appointment.time).toLocaleString()}</p>
-          <p><strong>Type:</strong> ${appointment.type}</p>
-          ${appointment.phone ? `<p><strong>Phone:</strong> ${appointment.phone}</p>` : ''}
-          ${appointment.notes ? `<p><strong>Notes:</strong> ${appointment.notes}</p>` : ''}
-          <button class="delete-btn" onclick="deleteAppointment(${appointment.id})">Delete</button>
-        `;
-        
-        if (isUpcoming) {
-          upcomingContainer.appendChild(div);
-        } else {
-          pastContainer.appendChild(div);
+    function renderTrackerInputs(initial){
+      const metric=$('#ht_metric')?.value||'bp';
+      const wrap = `
+        <div class="form-group"><label>${lang==='es'?'Fecha':'Date'}</label><input id="ht_date" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+        <div class="form-group"><label>${lang==='es'?'Hora':'Time'}</label><input id="ht_time" type="time" value="${new Date().toTimeString().slice(0,5)}"></div>
+        ${metric==='bp'
+          ? `<div class="form-group"><label>${lang==='es'?'Sistólica':'Systolic'}</label><input id="bp_sys" type="number"></div>
+             <div class="form-group"><label>${lang==='es'?'Diastólica':'Diastolic'}</label><input id="bp_dia" type="number"></div>
+             <div class="form-group"><label>${lang==='es'?'Pulso (opcional)':'Pulse (optional)'}</label><input id="bp_pulse" type="number"></div>`
+          : metric==='glucose'
+          ? `<div class="form-group"><label>${lang==='es'?'Glucosa (mg/dL)':'Glucose (mg/dL)'}</label><input id="glu_val" type="number"></div>
+             <div class="form-group"><label>${lang==='es'?'Contexto':'Context'}</label><input id="glu_ctx" placeholder="fasting / post-meal"></div>`
+          : `<div class="form-group"><label>${lang==='es'?'Peso (lb)':'Weight (lb)'}</label><input id="w_val" type="number"></div>`
         }
+        <div class="form-group"><label>${lang==='es'?'Notas':'Notes'}</label><input id="ht_notes"></div>`;
+      if (initial) return wrap; const target=$('#ht_inputs'); if(target) target.innerHTML=wrap;
+    }
+    function addTrackerEntry(){
+      const metric=$('#ht_metric')?.value||'bp'; const tracker=store.get('tracker',{bp:[],glucose:[],weight:[]});
+      const base={date:$('#ht_date')?.value||'', time:$('#ht_time')?.value||'', notes:($('#ht_notes')?.value ?? '').toString()};
+      if(metric==='bp'){ const sys=parseInt($('#bp_sys')?.value||'',10), dia=parseInt($('#bp_dia')?.value||'',10); if(!sys||!dia) return;
+        tracker.bp.push({...base, sys, dia, pulse: parseInt($('#bp_pulse')?.value||'',10)||null}); }
+      else if(metric==='glucose'){ const val=parseInt($('#glu_val')?.value||'',10); if(!val) return; tracker.glucose.push({...base, value:val, context:($('#glu_ctx')?.value ?? '').toString()}); }
+      else { const val=parseFloat($('#w_val')?.value||''); if(!val) return; tracker.weight.push({...base, value:val}); }
+      store.set('tracker',tracker); $('#ht_list').innerHTML=renderTrackerList(tracker);
+    }
+    function renderTrackerList(tr){ const rows=[]; tr.bp.slice(-5).reverse().forEach(r=>rows.push(`<div class="info-item"><div><strong>BP</strong> ${esc(r.date)} ${esc(r.time)} — ${r.sys}/${r.dia}${r.pulse?` (Pulse ${r.pulse})`:''}</div><div style="font-size:.75rem;color:#555;">${esc(r.notes||'')}</div></div>`));
+      tr.glucose.slice(-5).reverse().forEach(r=>rows.push(`<div class="info-item"><div><strong>Glucose</strong> ${esc(r.date)} ${esc(r.time)} — ${r.value} mg/dL ${r.context?`(${esc(r.context)})`:''}</div><div style="font-size:.75rem;color:#555;">${esc(r.notes||'')}</div></div>`));
+      tr.weight.slice(-5).reverse().forEach(r=>rows.push(`<div class="info-item"><div><strong>Weight</strong> ${esc(r.date)} ${esc(r.time)} — ${r.value} lb</div><div style="font-size:.75rem;color:#555;">${esc(r.notes||'')}</div></div>`));
+      return rows.length ? rows.join('') : `<p>${lang==='es'?'Sin registros.':'No entries yet.'}</p>`; }
+
+    // ---------- Reminders ----------
+    function showReminders(){ resetChat();
+      addBubble('bot', sectionWrap(`
+        <h3>⏰ ${lang==='es'?'Recordatorios de medicación':'Medication Reminders'}</h3>
+        <div id="activeReminders"></div>
+        <div style="margin-top:1.2rem;padding-top:1rem;border-top:2px solid #e0e0e0;">
+          <h4 style="color:#28a745;margin-bottom:.8rem;">➕ ${lang==='es'?'Nuevo recordatorio':'Set New Reminder'}</h4>
+          <div class="form-group"><label>${lang==='es'?'Medicamento':'Medication'}</label><input id="reminderMedication"></div>
+          <div class="form-group"><label>${lang==='es'?'Hora':'Time'}</label><input type="time" id="reminderTime"></div>
+          <div class="form-group"><label>${lang==='es'?'Frecuencia':'Frequency'}</label>
+            <select id="reminderFrequency">
+              <option value="daily">${lang==='es'?'Diario':'Daily'}</option>
+              <option value="twice_daily">${lang==='es'?'Dos veces al día':'Twice Daily'}</option>
+              <option value="three_times">${lang==='es'?'Tres veces al día':'Three Times Daily'}</option>
+              <option value="weekly">${lang==='es'?'Semanal':'Weekly'}</option>
+            </select></div>
+          <button class="btn" onclick="addReminder()">⏰ ${lang==='es'?'Crear':'Set Reminder'}</button>
+        </div>`));
+      loadActiveReminders();
+    }
+    function loadActiveReminders(){ const list=store.get('reminders',[]); const t=$('#activeReminders'); if(!t) return;
+      t.innerHTML = list.length ? list.map((r,i)=>`
+        <div class="info-item medication-item" style="display:flex;justify-content:space-between;gap:.5rem;align-items:center;padding:.5rem;border-left:3px solid #e0e0e0;background:#fff;margin:.4rem 0;border-radius:6px;">
+          <div>${esc(r.med)} — ${esc(r.freq)} @ <span class="medication-time">${esc(r.time)}</span></div>
+          <button class="btn" onclick="deleteReminder(${i})">${lang==='es'?'Quitar':'Remove'}</button>
+        </div>
+      `).join('') : `<p>${lang==='es'?'Sin recordatorios.':'No active reminders.'}</p>`; }
+    function addReminder(){
+      const med = (($('#reminderMedication')?.value) ?? '').toString().trim();
+      const time = $('#reminderTime')?.value || '';
+      const freq = $('#reminderFrequency')?.value || 'daily';
+      if(!med||!time) return;
+      const list=store.get('reminders',[]); list.push({med,time,freq,date:new Date().toISOString().slice(0,10)}); store.set('reminders',list); loadActiveReminders(); }
+    function deleteReminder(i){ const list=store.get('reminders',[]); list.splice(i,1); store.set('reminders',list); loadActiveReminders(); }
+
+    // ---------- Emergency ----------
+    function showEmergencyInfo(){ resetChat();
+      const e=store.get('emergency',{contacts:[],conditions:'',meds:'',allergies:''});
+      addBubble('bot', sectionWrap(`
+        <h3>🚨 ${lang==='es'?'Emergencia':'Emergency Info'}</h3>
+        <div class="form-group"><label>${lang==='es'?'Condiciones (críticas)':'Conditions (critical)'}</label><textarea id="em_conditions">${esc(e.conditions)}</textarea></div>
+        <div class="form-group"><label>${lang==='es'?'Alergias (críticas)':'Allergies (critical)'}</label><textarea id="em_allergies">${esc(e.allergies)}</textarea></div>
+        <div class="form-group"><label>${lang==='es'?'Medicamentos clave':'Key Medications'}</label><textarea id="em_meds">${esc(e.meds)}</textarea></div>
+        <div style="margin:.6rem 0;"><strong>${lang==='es'?'Contactos ICE':'ICE Contacts'}</strong></div>
+        <div id="em_contacts">${renderContacts(e.contacts)}</div>
+        <div class="form-group"><label>${lang==='es'?'Nuevo contacto — Nombre':'New Contact — Name'}</label><input id="em_c_name"></div>
+        <div class="form-group"><label>${lang==='es'?'Relación':'Relationship'}</label><input id="em_c_rel"></div>
+        <div class="form-group"><label>${lang==='es'?'Teléfono':'Phone'}</label><input id="em_c_phone"></div>
+        <button class="btn" onclick="addContact()">${lang==='es'?'Añadir contacto':'Add Contact'}</button>
+        <button class="btn" onclick="saveEmergency()">💾 ${lang==='es'?'Guardar todo':'Save All'}</button>`));
+    }
+    function renderContacts(list){ if(!list||!list.length) return `<p>${lang==='es'?'Sin contactos.':'No contacts yet.'}</p>`;
+      return list.map((c,i)=>`<div class="info-item" style="display:flex;justify-content:space-between;gap:.5rem;align-items:center;padding:.5rem;border-left:3px solid #e0e0e0;background:#fff;margin:.4rem 0;border-radius:6px;">
+        <div><strong>${esc(c.name)}</strong> — ${esc(c.rel)} — ${esc(c.phone)}</div>
+        <div><button class="btn" style="background:#dc3545" onclick="deleteContact(${i})">${lang==='es'?'Eliminar':'Delete'}</button></div>
+      </div>`).join(''); }
+    function addContact(){
+      const name = (($('#em_c_name')?.value) ?? '').toString().trim();
+      const rel  = (($('#em_c_rel')?.value)  ?? '').toString().trim();
+      const phone= (($('#em_c_phone')?.value)?? '').toString().trim();
+      if(!name||!phone) return;
+      const e=store.get('emergency',{contacts:[],conditions:'',meds:'',allergies:''});
+      e.contacts.push({name,rel,phone}); store.set('emergency',e); $('#em_contacts').innerHTML=renderContacts(e.contacts);
+      ['em_c_name','em_c_rel','em_c_phone'].forEach(id=>{ const el=$('#'+id); if(el) el.value=''; });
+    }
+    function deleteContact(i){ const e=store.get('emergency',{contacts:[],conditions:'',meds:'',allergies:''}); e.contacts.splice(i,1); store.set('emergency',e); $('#em_contacts').innerHTML=renderContacts(e.contacts); }
+    function saveEmergency(){ const e=store.get('emergency',{contacts:[],conditions:'',meds:'',allergies:''});
+      e.conditions=($('#em_conditions')?.value ?? '').toString(); e.allergies=($('#em_allergies')?.value ?? '').toString(); e.meds=($('#em_meds')?.value ?? '').toString(); store.set('emergency',e);
+      addBubble('bot', sectionWrap(`<strong>${lang==='es'?'Guardado.':'Saved.'}</strong>`)); }
+
+    // ---------- Language toggle ----------
+    function toggleLanguage(){
+      lang = (lang==='en') ? 'es' : 'en';
+      const btn = document.getElementById('translateBtn');
+      if (btn) btn.textContent = (lang==='en') ? 'Español' : 'English';
+
+      renderCards();   // re-render grid in the new language
+      resetChat();     // start a new thread matching the new language
+      addBubble('bot', sectionWrap(`<h3>🌐 ${lang==='es'?'Idioma':'Language'}</h3><p>${lang==='es'?'Interfaz en Español. Las respuestas se devolverán en Español.':'UI in English. Chat replies will return in English.'}</p>`));
+    }
+    function goHome(){ resetChat(); }
+
+    // Expose to window
+    window.sendMessage=sendMessage; window.showCalendar=showCalendar; window.showMyInfo=showMyInfo; window.showAppointments=showAppointments;
+    window.showMedications=showMedications; window.showDrugChecker=showDrugChecker; window.showHealthTracker=showHealthTracker;
+    window.showReminders=showReminders; window.runDrugCheck=runDrugCheck; window.goHome=goHome; window.toggleLanguage=toggleLanguage;
+    window.exportMedsCSV=exportMedsCSV; window.exportApptsCSV=exportApptsCSV; window.exportTrackerCSV=exportTrackerCSV;
+
+    // ---------- Initial render ----------
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCards();
+      resetChat();
+    });
+  </script>
+
+  <!-- Hardened Consent (first run) -->
+  <script>
+  (function(){
+    const KEY = 'ih_consent_v1';
+    function allowThrough(modal){
+      try { localStorage.setItem(KEY, JSON.stringify({ t: Date.now(), v: 1 })); } catch {}
+      if (modal) { modal.remove(); }
+    }
+    try {
+      const modal = document.getElementById('consent');
+      const agree = document.getElementById('consentAgree');
+      const go    = document.getElementById('consentContinue');
+      if (!modal || !agree || !go) return;
+      const qs = new URLSearchParams(location.search);
+      if (qs.get('noconsent') === '1') { allowThrough(modal); return; }
+      const seen = localStorage.getItem(KEY);
+      if (seen) { modal.remove(); return; }
+      modal.hidden = false;
+      go.disabled = !agree.checked;
+      agree.addEventListener('input', () => { go.disabled = !agree.checked; });
+      go.addEventListener('click', () => allowThrough(modal));
+      modal.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !go.disabled) { e.preventDefault(); go.click(); }
       });
-      
-      if (upcomingContainer.children.length === 0) {
-        upcomingContainer.innerHTML = '<p>No upcoming appointments scheduled.</p>';
-      }
-      
-      if (pastContainer.children.length === 0) {
-        pastContainer.innerHTML = '<p>No past appointments recorded.</p>';
-      }
+    } catch (e) {
+      const modal = document.getElementById('consent'); const go = document.getElementById('consentContinue');
+      if (modal && go) { modal.hidden = false; go.disabled = false; go.addEventListener('click', () => modal.remove()); }
     }
+  })();
+  </script>
 
-    function deleteAppointment(id) {
-      healthData.appointments = healthData.appointments.filter(a => a.id !== id);
-      loadAppointments();
-    }
-
-    // Medications Functions
-    function addMedication() {
-      const name = document.getElementById('medicationName').value;
-      const dosage = document.getElementById('medicationDosage').value;
-      const frequency = document.getElementById('medicationFrequency').value;
-      const time = document.getElementById('medicationTime').value;
-      const doctor = document.getElementById('prescribingDoctor').value;
-      const pharmacy = document.getElementById('pharmacy').value;
-      const notes = document.getElementById('medicationNotes').value;
-      
-      if (name && dosage) {
-        const medication = {
-          id: Date.now(),
-          name: name,
-          dosage: dosage,
-          frequency: frequency,
-          time: time,
-          doctor: doctor,
-          pharmacy: pharmacy,
-          notes: notes,
-          dateAdded: new Date().toLocaleDateString()
-        };
-        
-        healthData.medications.push(medication);
-        loadMedications();
-        
-        // Clear form
-        document.getElementById('medicationName').value = '';
-        document.getElementById('medicationDosage').value = '';
-        document.getElementById('medicationTime').value = '';
-        document.getElementById('prescribingDoctor').value = '';
-        document.getElementById('pharmacy').value = '';
-        document.getElementById('medicationNotes').value = '';
+  <!-- Splash controller -->
+  <script>
+    (function () {
+      const splash = document.getElementById('splash');
+      function hideSplash(immediate){
+        if(!splash || splash.classList.contains('hidden')) return;
+        splash.classList.add('hidden');
+        setTimeout(()=>{ try{splash.remove();}catch{} }, immediate?0:450);
+        const input=document.getElementById('userInput'); if(input) try{input.focus();}catch{}
+        try { sessionStorage.setItem('ih_seen_splash','1'); } catch {}
       }
-    }
-
-    function loadMedications() {
-      const container = document.getElementById('currentMedications');
-      container.innerHTML = '';
-      
-      healthData.medications.forEach(medication => {
-        const div = document.createElement('div');
-        div.className = 'health-card';
-        div.style.cssText = 'background: white; margin-bottom: 10px;';
-        div.innerHTML = `
-          <h4 style="margin: 0 0 10px 0; color: #DAA520;">${medication.name} ${medication.dosage}</h4>
-          <p><strong>Frequency:</strong> ${medication.frequency}</p>
-          ${medication.time ? `<p><strong>Time to Take:</strong> ${medication.time}</p>` : ''}
-          ${medication.doctor ? `<p><strong>Prescribed by:</strong> ${medication.doctor}</p>` : ''}
-          ${medication.pharmacy ? `<p><strong>Pharmacy:</strong> ${medication.pharmacy}</p>` : ''}
-          ${medication.notes ? `<p><strong>Notes:</strong> ${medication.notes}</p>` : ''}
-          <p><small>Added: ${medication.dateAdded}</small></p>
-          <button class="delete-btn" onclick="deleteMedication(${medication.id})">Delete</button>
-        `;
-        container.appendChild(div);
-      });
-      
-      if (healthData.medications.length === 0) {
-        container.innerHTML = '<p>No medications added yet.</p>';
-      }
-    }
-
-    function deleteMedication(id) {
-      healthData.medications = healthData.medications.filter(m => m.id !== id);
-      loadMedications();
-    }
+      window.hideSplash = hideSplash;
+      let seen=null; try{ seen=sessionStorage.getItem('ih_seen_splash'); }catch{}
+      if(seen==='1'){ requestAnimationFrame(()=>hideSplash(true)); return; }
+      window.addEventListener('load', ()=> setTimeout(hideSplash, 900));
+      setTimeout(hideSplash, 3000); // safety fallback
+    })();
   </script>
 </body>
 </html>
